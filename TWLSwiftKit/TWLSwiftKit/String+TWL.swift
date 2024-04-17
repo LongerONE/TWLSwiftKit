@@ -17,27 +17,27 @@ public extension String {
         return self
     }
     
-    public struct TWLStringStruct {
+    struct TWLStringStruct {
         private let string: String
         
         init(_ string: String) {
             self.string = string
         }
         
-        var localized: String {
+        public var localized: String {
             return NSLocalizedString(self.string, comment: "")
         }
         
-        var addPercent: String {
+        public var addPercent: String {
             return self.string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self.string
         }
 
-        var addPercentAllowLetters: String {
+        public var addPercentAllowLetters: String {
             return self.string.addingPercentEncoding(withAllowedCharacters: .letters) ?? self.string
         }
         
         
-        var array:Array<Any>? {
+        public var array:Array<Any>? {
             if let jsonData = self.string.data(using: .utf8) {
                 do {
                     let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]]
@@ -51,7 +51,7 @@ public extension String {
             }
         }
         
-        var dict: [String: Any]? {
+        public var dict: [String: Any]? {
             if let jsonData = self.string.data(using: .utf8) {
                 do {
                     let jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
@@ -66,7 +66,7 @@ public extension String {
         }
         
         
-        func addQuery(key:String, value: String) -> String {
+        public func addQuery(key:String, value: String) -> String {
             if self.string.contains("?") {
                 return "\(self.string)&\(key)=\(value)"
             } else {
@@ -76,7 +76,7 @@ public extension String {
     }
     
 
-    public var twl: TWLStringStruct {
+     var twl: TWLStringStruct {
         return TWLStringStruct(self)
     }
 }

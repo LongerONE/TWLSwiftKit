@@ -11,14 +11,14 @@ import UIKit
 public extension UIView {
     
     // MARK: TWLUIViewExStruct
-    public struct TWLUIViewExStruct {
+    struct TWLUIViewExStruct {
         private let view: UIView
         
         init(_ view: UIView) {
             self.view = view
         }
         
-        var x: CGFloat {
+        public var x: CGFloat {
             get {
                 return self.view.frame.origin.x
             }
@@ -31,7 +31,7 @@ public extension UIView {
         }
         
         
-        var y: CGFloat {
+        public var y: CGFloat {
             get {
                 return self.view.frame.origin.y
             }
@@ -44,7 +44,7 @@ public extension UIView {
         }
         
         
-        var width: CGFloat {
+        public var width: CGFloat {
             get {
                 return self.view.frame.size.width
             }
@@ -57,7 +57,7 @@ public extension UIView {
         }
         
         
-        var height: CGFloat {
+        public var height: CGFloat {
             get {
                 return self.view.frame.size.height
             }
@@ -70,7 +70,7 @@ public extension UIView {
         }
         
         
-        var centerX: CGFloat {
+        public var centerX: CGFloat {
             get {
                 return self.view.frame.origin.x + self.view.frame.size.width * 0.5
             }
@@ -83,7 +83,7 @@ public extension UIView {
         }
         
         
-        var centerY: CGFloat {
+        public var centerY: CGFloat {
             get {
                 return self.view.frame.origin.y + self.view.frame.size.height * 0.5
             }
@@ -99,14 +99,14 @@ public extension UIView {
 
         
         
-        var pixelWidth: CGFloat {
+        public var pixelWidth: CGFloat {
             get {
                 return self.view.frame.size.width * UIScreen.main.scale
             }
         }
         
         
-        var pixelHeight: CGFloat {
+        public var pixelHeight: CGFloat {
             get {
                 return self.view.frame.size.height * UIScreen.main.scale
             }
@@ -114,8 +114,8 @@ public extension UIView {
     }
     
     // MARK: TWLUIViewClassExStruct
-    public struct TWLUIViewClassExStruct {
-        static func loadFromNib<T>() -> T where T: UIView {
+     struct TWLUIViewClassExStruct {
+         public static func loadFromNib<T>() -> T where T: UIView {
             return Bundle.main.loadNibNamed(String(describing: T.self), owner: nil, options: nil)?.first as! T
         }
     }
@@ -123,9 +123,9 @@ public extension UIView {
     
 
     
-    public static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
+    static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
     
-    public var twl: TWLUIViewExStruct {
+    var twl: TWLUIViewExStruct {
         get {
             return TWLUIViewExStruct(self)
         }
