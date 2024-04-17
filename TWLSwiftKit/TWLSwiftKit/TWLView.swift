@@ -8,9 +8,9 @@
 import UIKit
 
 @IBDesignable
-public class TWLView: UIView {
+open class TWLView: UIView {
 
-    @IBInspectable var cornerRadius: Double {
+    @IBInspectable public var cornerRadius: Double {
          get {
            return Double(self.layer.cornerRadius)
          }set {
@@ -18,7 +18,7 @@ public class TWLView: UIView {
          }
     }
 
-    @IBInspectable var borderWidth: Double {
+    @IBInspectable public var borderWidth: Double {
           get {
             return Double(self.layer.borderWidth)
           }
@@ -26,7 +26,7 @@ public class TWLView: UIView {
            self.layer.borderWidth = CGFloat(newValue)
           }
     }
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable public var borderColor: UIColor? {
          get {
             return UIColor(cgColor: self.layer.borderColor!)
          }
@@ -34,7 +34,7 @@ public class TWLView: UIView {
             self.layer.borderColor = newValue?.cgColor
          }
     }
-    @IBInspectable var shadowColor: UIColor? {
+    @IBInspectable public var shadowColor: UIColor? {
         get {
            return UIColor(cgColor: self.layer.shadowColor!)
         }
@@ -42,7 +42,7 @@ public class TWLView: UIView {
            self.layer.shadowColor = newValue?.cgColor
         }
     }
-    @IBInspectable var shadowOpacity: Float {
+    @IBInspectable public var shadowOpacity: Float {
         get {
            return self.layer.shadowOpacity
         }
@@ -51,7 +51,7 @@ public class TWLView: UIView {
        }
     }
     
-    @IBInspectable var shadowRadius: CGFloat {
+    @IBInspectable public var shadowRadius: CGFloat {
         get {
             return self.layer.shadowRadius
         }
@@ -60,7 +60,7 @@ public class TWLView: UIView {
        }
     }
     
-    @IBInspectable var shadowOffsetHeight: CGFloat {
+    @IBInspectable public var shadowOffsetHeight: CGFloat {
         get {
             return self.layer.shadowOffset.height
         }

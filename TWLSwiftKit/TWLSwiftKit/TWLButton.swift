@@ -8,21 +8,21 @@
 import UIKit
 
 @IBDesignable
-public class TWLButton: UIButton {
+open class TWLButton: UIButton {
 
-    var uuid: String?
+    public var uuid: String?
     
-    var obj: Any?
+    public var obj: Any?
     
-    var touchUpInSideClosure:((_ btn: TWLButton) -> Void)?
+    public var touchUpInSideClosure:((_ btn: TWLButton) -> Void)?
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.addTarget(self, action: #selector(touchUpInSideAction), for: .touchUpInside)
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         self.addTarget(self, action: #selector(touchUpInSideAction), for: .touchUpInside)
@@ -35,7 +35,7 @@ public class TWLButton: UIButton {
     }
 
     
-    @IBInspectable var onePixelBorder: Bool {
+    @IBInspectable public var onePixelBorder: Bool {
         get {
             return self.layer.borderWidth == 1.0 / UIScreen.main.scale
         } set {
@@ -47,7 +47,7 @@ public class TWLButton: UIButton {
         }
     }
     
-    @IBInspectable var cornerRadius: Double {
+    @IBInspectable public var cornerRadius: Double {
          get {
            return Double(self.layer.cornerRadius)
          }set {
@@ -55,7 +55,7 @@ public class TWLButton: UIButton {
          }
     }
 
-    @IBInspectable var borderWidth: Double {
+    @IBInspectable public var borderWidth: Double {
           get {
             return Double(self.layer.borderWidth)
           }
@@ -63,7 +63,7 @@ public class TWLButton: UIButton {
            self.layer.borderWidth = CGFloat(newValue)
           }
     }
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable public var borderColor: UIColor? {
          get {
             return UIColor(cgColor: self.layer.borderColor!)
          }
@@ -71,7 +71,7 @@ public class TWLButton: UIButton {
             self.layer.borderColor = newValue?.cgColor
          }
     }
-    @IBInspectable var shadowColor: UIColor? {
+    @IBInspectable public var shadowColor: UIColor? {
         get {
            return UIColor(cgColor: self.layer.shadowColor!)
         }
@@ -79,7 +79,7 @@ public class TWLButton: UIButton {
            self.layer.shadowColor = newValue?.cgColor
         }
     }
-    @IBInspectable var shadowOpacity: Float {
+    @IBInspectable public var shadowOpacity: Float {
         get {
            return self.layer.shadowOpacity
         }
@@ -89,7 +89,7 @@ public class TWLButton: UIButton {
     }
     
     
-    @IBInspectable var shadowRadius: CGFloat {
+    @IBInspectable public var shadowRadius: CGFloat {
         get {
             return self.layer.shadowRadius
         }
@@ -98,7 +98,7 @@ public class TWLButton: UIButton {
        }
     }
     
-    @IBInspectable var shadowOffsetHeight: CGFloat {
+    @IBInspectable public var shadowOffsetHeight: CGFloat {
         get {
             return self.layer.shadowOffset.height
         }

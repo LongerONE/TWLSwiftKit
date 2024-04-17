@@ -7,8 +7,8 @@
 
 import UIKit
 
-let TWL_ScreenWidth = UIScreen.main.bounds.size.width
-let TWL_ScreenHeight = UIScreen.main.bounds.size.height
+public let TWL_ScreenWidth = UIScreen.main.bounds.size.width
+public let TWL_ScreenHeight = UIScreen.main.bounds.size.height
 
 
 public func TWLDPrint(_ item: Any) {

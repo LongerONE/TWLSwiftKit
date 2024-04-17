@@ -7,11 +7,11 @@
 
 import UIKit
 
-public class TWLBaseAlertView: TWLView {
+open class TWLBaseAlertView: TWLView {
 
-    var maskAlpha: CGFloat = 0.0
-    var touchDismiss = false
-    var cancelClosure:() -> Void = {}
+    public var maskAlpha: CGFloat = 0.0
+    public var touchDismiss = false
+    public var cancelClosure:() -> Void = {}
     
     public func show(from: UIView?, on: UIView? = nil) {
         let maskBtn = TWLButton(type: .custom)

@@ -7,13 +7,13 @@
 
 import UIKit
 
-public class TWLAlertView: TWLView {
+open class TWLAlertView: TWLView {
 
-    var maskBtn: TWLButton = TWLButton(type: .custom)
+    public var maskBtn: TWLButton = TWLButton(type: .custom)
     
-    var maskAlpha = 0.72
+    public var maskAlpha = 0.72
     
-    var canTapMaskDismss = false
+    public var canTapMaskDismss = false
     
     public func showCenterFade() {
         let window: UIWindow? = UIApplication.shared.twlKeyWindow

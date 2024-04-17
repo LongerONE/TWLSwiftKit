@@ -8,14 +8,14 @@
 import Foundation
 
 public extension Array  {
-    public struct TWLArrayStruct {
+    struct TWLArrayStruct {
         private var arrry: Array
         
         init(_ arrry: Array) {
             self.arrry = arrry
         }
         
-        var JSONString: String? {
+        public var JSONString: String? {
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: self.arrry, options: [])
                 let jsonString = String(data: jsonData, encoding: .utf8)
@@ -29,7 +29,7 @@ public extension Array  {
     }
     
     
-    public var twl: TWLArrayStruct {
+    var twl: TWLArrayStruct {
         return TWLArrayStruct(self)
     }
 }
