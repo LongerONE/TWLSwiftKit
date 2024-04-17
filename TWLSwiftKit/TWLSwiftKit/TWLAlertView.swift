@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TWLAlertView: TWLView { 
+public class TWLAlertView: TWLView {
 
     var maskBtn: TWLButton = TWLButton(type: .custom)
     
@@ -15,7 +15,7 @@ class TWLAlertView: TWLView {
     
     var canTapMaskDismss = false
     
-    func showCenterFade() {
+    public func showCenterFade() {
         let window: UIWindow? = UIApplication.shared.twlKeyWindow
         self.maskBtn.alpha = 0.0
         self.maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
@@ -39,7 +39,7 @@ class TWLAlertView: TWLView {
     }
     
     
-    func dismiss() {
+    public func dismiss() {
         UIView.animate(withDuration: 0.3) {
             self.maskBtn.alpha = 0.0
         } completion: { _ in

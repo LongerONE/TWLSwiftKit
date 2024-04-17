@@ -8,7 +8,7 @@
 import UIKit
 
 @IBDesignable
-class TWLView: UIView {
+public class TWLView: UIView {
 
     @IBInspectable var cornerRadius: Double {
          get {

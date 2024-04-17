@@ -11,14 +11,14 @@ let TWL_ScreenWidth = UIScreen.main.bounds.size.width
 let TWL_ScreenHeight = UIScreen.main.bounds.size.height
 
 
-func TWLDPrint(_ item: Any) {
+public func TWLDPrint(_ item: Any) {
     #if DEBUG
     print(item)
     #endif
 }
 
 
-var twlWindowWidth: CGFloat {
+public var twlWindowWidth: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.bounds.size.width ?? 0.0
     }
@@ -28,7 +28,7 @@ var twlWindowWidth: CGFloat {
     }
 }
 
-var twlWindowHeight: CGFloat {
+public var twlWindowHeight: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.bounds.size.height ?? 0.0
     }
@@ -39,7 +39,7 @@ var twlWindowHeight: CGFloat {
 }
 
 
-var twlWindowSafeLeft: CGFloat {
+public var twlWindowSafeLeft: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.left ?? 0.0
     }
@@ -49,7 +49,7 @@ var twlWindowSafeLeft: CGFloat {
     }
 }
 
-var twlWindowSafeRight: CGFloat {
+public var twlWindowSafeRight: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.right ?? 0.0
     }
@@ -59,7 +59,7 @@ var twlWindowSafeRight: CGFloat {
     }
 }
 
-var twlWindowSafeTop: CGFloat {
+public var twlWindowSafeTop: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.top ?? 0.0
     }
@@ -69,7 +69,7 @@ var twlWindowSafeTop: CGFloat {
     }
 }
 
-var twlWindowSafeBottom: CGFloat {
+public var twlWindowSafeBottom: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.bottom ?? 0.0
     }
@@ -80,13 +80,26 @@ var twlWindowSafeBottom: CGFloat {
 }
 
 
-extension UIApplication {
+public extension UIApplication {
+   
     var twlKeyWindow: UIWindow? {
-        let scenes = connectedScenes
-        return scenes.compactMap { $0 as? UIWindowScene }
-            .first?.windows
-            .filter { $0.isKeyWindow }
-            .first
+        get {
+            if #available(iOS 13.0, *) {
+                let scenes = connectedScenes
+                if scenes.count > 0 {
+                    return scenes.compactMap { $0 as? UIWindowScene }
+                        .first?.windows
+                        .filter { $0.isKeyWindow }
+                        .first
+                } else {
+                    return self.keyWindow
+                }
+            } else {
+                return self.keyWindow
+            }
+        }
+
+
     }
 }
 

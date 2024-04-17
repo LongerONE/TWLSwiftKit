@@ -8,10 +8,11 @@
 import UIKit
 
 
-extension UIColor {
+public extension UIColor {
     
     // MARK: TWLUIViewClassExStruct
     struct TWLUIColorClassExStruct {
+        @available(iOS 13.0, *)
         static func from(hex: String, alpha: CGFloat = 1.0) -> UIColor {
             let scanner = Scanner(string: hex)
               scanner.currentIndex = hex.hasPrefix("#") ? hex.index(after: hex.startIndex) : hex.startIndex

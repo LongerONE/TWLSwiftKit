@@ -8,7 +8,7 @@
 import UIKit
 
 @IBDesignable
-class TWLButton: UIButton {
+public class TWLButton: UIButton {
 
     var uuid: String?
     

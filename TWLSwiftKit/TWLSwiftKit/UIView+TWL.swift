@@ -8,10 +8,10 @@
 import UIKit
 
 
-extension UIView {
+public extension UIView {
     
     // MARK: TWLUIViewExStruct
-    struct TWLUIViewExStruct {
+    public struct TWLUIViewExStruct {
         private let view: UIView
         
         init(_ view: UIView) {
@@ -114,7 +114,7 @@ extension UIView {
     }
     
     // MARK: TWLUIViewClassExStruct
-    struct TWLUIViewClassExStruct {
+    public struct TWLUIViewClassExStruct {
         static func loadFromNib<T>() -> T where T: UIView {
             return Bundle.main.loadNibNamed(String(describing: T.self), owner: nil, options: nil)?.first as! T
         }
@@ -123,9 +123,9 @@ extension UIView {
     
 
     
-    static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
+    public static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
     
-    var twl: TWLUIViewExStruct {
+    public var twl: TWLUIViewExStruct {
         get {
             return TWLUIViewExStruct(self)
         }

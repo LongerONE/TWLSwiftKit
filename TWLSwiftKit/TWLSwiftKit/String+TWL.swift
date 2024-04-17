@@ -8,7 +8,7 @@
 import Foundation
 
 
-extension String {
+public extension String {
     
     var trimmedLeadingWhitespace: String {
         if let range = self.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
@@ -17,7 +17,7 @@ extension String {
         return self
     }
     
-    struct TWLStringStruct {
+    public struct TWLStringStruct {
         private let string: String
         
         init(_ string: String) {
@@ -76,7 +76,7 @@ extension String {
     }
     
 
-    var twl: TWLStringStruct {
+    public var twl: TWLStringStruct {
         return TWLStringStruct(self)
     }
 }

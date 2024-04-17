@@ -7,8 +7,8 @@
 
 import Foundation
 
-extension Array  {
-    struct TWLArrayStruct {
+public extension Array  {
+    public struct TWLArrayStruct {
         private var arrry: Array
         
         init(_ arrry: Array) {
@@ -29,7 +29,7 @@ extension Array  {
     }
     
     
-    var twl: TWLArrayStruct {
+    public var twl: TWLArrayStruct {
         return TWLArrayStruct(self)
     }
 }
