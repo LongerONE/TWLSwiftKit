@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 public extension String {
         
@@ -18,7 +18,7 @@ public extension String {
         }
         
         // 移除前面空格
-        var trimmedLeadingWhitespace: String {
+        public var trimmedLeadingWhitespace: String {
             if let range = self.string.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
                 return String(self.string[range.lowerBound...])
             }
@@ -44,7 +44,7 @@ public extension String {
                     let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]]
                     return jsonArray
                 } catch let error {
-                    TWLDPrint("Error converting JSON to array: \(error.localizedDescription)")
+                    TWLDPrint("❌ JSON String 转数组失败: \(error.localizedDescription)")
                     return nil
                 }
             } else {
@@ -58,7 +58,7 @@ public extension String {
                     let jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
                     return jsonDictionary
                 } catch {
-                    TWLDPrint("Error converting JSON to dictionary: \(error.localizedDescription)")
+                    TWLDPrint("❌ JSON String 转字典失败: \(error.localizedDescription)")
                     return nil
                 }
             } else {
@@ -72,6 +72,12 @@ public extension String {
                 return "\(self.string)&\(key)=\(value)"
             } else {
                 return "\(self.string)?\(key)=\(value)"
+            }
+        }
+        
+        public var color: UIColor {
+            get {
+                return UIColor.twl.from(hex: self.string)
             }
         }
     }

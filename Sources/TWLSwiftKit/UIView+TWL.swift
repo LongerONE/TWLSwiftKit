@@ -11,6 +11,7 @@ import UIKit
 public extension UIView {
     
     // MARK: TWLUIViewExStruct
+    @MainActor
     struct TWLUIViewExStruct {
         private let view: UIView
         
@@ -125,6 +126,7 @@ public extension UIView {
     
     static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
     
+
     var twl: TWLUIViewExStruct {
         get {
             return TWLUIViewExStruct(self)

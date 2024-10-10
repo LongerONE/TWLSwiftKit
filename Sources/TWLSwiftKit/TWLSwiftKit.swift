@@ -11,6 +11,8 @@ import UIKit
 public let TWLScreenWidth = UIScreen.main.bounds.size.width
 @MainActor
 public let TWLScreenHeight = UIScreen.main.bounds.size.height
+@MainActor
+public let TWLOnePixelHeight = 1.0 / UIScreen.main.scale
 
 
 public func TWLDPrint(_ item: Any) {
@@ -46,20 +48,12 @@ public var twlWindowWidth: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.bounds.size.width ?? 0.0
     }
-    
-    set {
-        
-    }
 }
 
 @MainActor
 public var twlWindowHeight: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.bounds.size.height ?? 0.0
-    }
-    
-    set {
-        
     }
 }
 
@@ -68,20 +62,12 @@ public var twlWindowSafeLeft: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.left ?? 0.0
     }
-    
-    set {
-        
-    }
 }
 
 @MainActor
 public var twlWindowSafeRight: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.right ?? 0.0
-    }
-    
-    set {
-        
     }
 }
 
@@ -90,20 +76,12 @@ public var twlWindowSafeTop: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.top ?? 0.0
     }
-    
-    set {
-        
-    }
 }
 
 @MainActor
 public var twlWindowSafeBottom: CGFloat {
     get {
         return UIApplication.shared.twlKeyWindow?.safeAreaInsets.bottom ?? 0.0
-    }
-    
-    set {
-        
     }
 }
 

@@ -13,27 +13,37 @@ public extension UIColor {
     // MARK: TWLUIViewClassExStruct
     struct TWLUIColorClassExStruct {
         public static func from(hex: String, alpha: CGFloat? = 1.0) -> UIColor {
-            let hexString = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-            var int = UInt64()
-            Scanner(string: hexString).scanHexInt64(&int)
-            let r, g, b: UInt64
-            switch hexString.count {
-            case 3: // RGB (12-bit)
-                (r, g, b) = ((int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-            case 6: // RGB (24-bit)
-                (r, g, b) = (int >> 16, int >> 8 & 0xFF, int & 0xFF)
-            case 8: // ARGB (32-bit)
-                (r, g, b) = (int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-            default:
-                (r, g, b) = (0, 0, 0) // Default color for invalid hex string
+            var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+            hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+            
+            let length = hexSanitized.count
+            
+            guard length == 6 || length == 8 else {
+                return UIColor.black
             }
+            
+            var rgb: UInt64 = 0
+            
+            Scanner(string: hexSanitized).scanHexInt64(&rgb)
+            
+            let red, green, blue, a: CGFloat
+            if length == 6 {
+                red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+                green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
+                blue = CGFloat(rgb & 0x0000FF) / 255.0
+                a = alpha ?? 1.0
+            } else if length == 8 {
+                red = CGFloat((rgb & 0xFF000000) >> 24) / 255.0
+                green = CGFloat((rgb & 0x00FF0000) >> 16) / 255.0
+                blue = CGFloat((rgb & 0x0000FF00) >> 8) / 255.0
+                a = CGFloat(rgb & 0x000000FF) / 255.0
+            } else {
+                return UIColor.black
+            }
+            
+            
 
-            return UIColor.init(
-                red: CGFloat(r) / 255,
-                green: CGFloat(g) / 255,
-                blue: CGFloat(b) / 255,
-                alpha: CGFloat(alpha) / 255
-            )
+            return UIColor.init(red: red, green: green, blue: blue, alpha: a)
         }
     }
     
