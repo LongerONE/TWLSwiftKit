@@ -38,10 +38,10 @@ public extension String {
         }
         
         
-        public var array:Array<Any>? {
+        public var array: Array<Any>? {
             if let jsonData = self.string.data(using: .utf8) {
                 do {
-                    let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]]
+                    let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? Array<Any>
                     return jsonArray
                 } catch let error {
                     TWLDPrint("❌ JSON String 转数组失败: \(error.localizedDescription)")
@@ -75,7 +75,7 @@ public extension String {
             }
         }
         
-        public var color: UIColor {
+        public var color: UIColor? {
             get {
                 return UIColor.twl.from(hex: self.string)
             }

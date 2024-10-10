@@ -12,14 +12,14 @@ public extension UIColor {
 
     // MARK: TWLUIViewClassExStruct
     struct TWLUIColorClassExStruct {
-        public static func from(hex: String, alpha: CGFloat? = 1.0) -> UIColor {
+        public static func from(hex: String, alpha: CGFloat? = 1.0) -> UIColor? {
             var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
             hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
             
             let length = hexSanitized.count
             
             guard length == 6 || length == 8 else {
-                return UIColor.black
+                return nil
             }
             
             var rgb: UInt64 = 0
@@ -38,7 +38,7 @@ public extension UIColor {
                 blue = CGFloat((rgb & 0x0000FF00) >> 8) / 255.0
                 a = CGFloat(rgb & 0x000000FF) / 255.0
             } else {
-                return UIColor.black
+                return nil
             }
             
             
