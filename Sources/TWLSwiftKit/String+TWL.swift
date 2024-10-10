@@ -9,19 +9,20 @@ import Foundation
 
 
 public extension String {
-    
-    var trimmedLeadingWhitespace: String {
-        if let range = self.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
-            return String(self[range.lowerBound...])
-        }
-        return self
-    }
-    
+        
     struct TWLStringStruct {
         private let string: String
         
         init(_ string: String) {
             self.string = string
+        }
+        
+        // 移除前面空格
+        var trimmedLeadingWhitespace: String {
+            if let range = self.string.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
+                return String(self.string[range.lowerBound...])
+            }
+            return self.string
         }
         
         public var localized: String {

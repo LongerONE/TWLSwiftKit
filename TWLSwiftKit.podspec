@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
 	spec.author                = { "LongerONE" => "tangwanlong425@qq.com" }
 	spec.platform              = :ios, "13.0"
 	spec.source                = { :git => "https://github.com/LongerONE/TWLSwiftKit.git", :tag => "#{spec.version}" }
-	spec.source_files          = "TWLSwiftKit/TWLSwiftKit/**/*.{swift}"
+	spec.source_files          = "Sources/TWLSwiftKit/**/*.{swift}"
 	spec.framework             = "UIKit"
 	spec.framework             = "AVFoundation"
 	spec.framework             = "Security"
