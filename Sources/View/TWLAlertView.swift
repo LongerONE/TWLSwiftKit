@@ -8,46 +8,43 @@
 import UIKit
 
 open class TWLAlertView: TWLView {
-
-    public var maskBtn: TWLButton = TWLButton(type: .custom)
     
     public var maskAlpha = 0.72
     
     public var canTapMaskDismss = false
     
-    public func showCenterFade() {
-        let window: UIWindow? = UIApplication.shared.twlKeyWindow
-        self.maskBtn.alpha = 0.0
-        self.maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-        window?.addSubview(self.maskBtn)
-        self.maskBtn.frame = window?.bounds ?? .zero
+    public func showCenterFade(on: UIView?) {
+        guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
+        
+        let maskBtn = UIButton(type: .custom)
+        maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
+        maskBtn.alpha = 0.0
+        maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+        showView.addSubview(maskBtn)
+        maskBtn.frame = showView.bounds ?? .zero
         
         maskBtn.addSubview(self)
         self.center = maskBtn.center
         
         UIView.animate(withDuration: 0.3) {
-            self.maskBtn.alpha = 1.0
-        } completion: { _ in
-            
-        }
-        
-        self.maskBtn.touchUpInSideClosure = {[unowned self] _ in
-            if self.canTapMaskDismss {
-                self.dismiss()
-            }
+            maskBtn.alpha = 1.0
         }
     }
     
     
     public func dismiss() {
         UIView.animate(withDuration: 0.3) {
-            self.maskBtn.alpha = 0.0
+            self.superview?.alpha = 0.0
         } completion: { _ in
-            self.maskBtn.removeFromSuperview()
+            self.superview?.removeFromSuperview()
         }
     }
     
     
-    
+    @objc func maskTapAction() {
+        if canTapMaskDismss {
+            dismiss()
+        }
+    }
     
 }
