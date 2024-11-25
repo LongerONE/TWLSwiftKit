@@ -13,7 +13,7 @@ open class TWLAlertView: TWLView {
     
     public var canTapMaskDismss = false
     
-    public func showCenterFade(on: UIView?) {
+    public func showCenterFade(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         
         let maskBtn = UIButton(type: .custom)
