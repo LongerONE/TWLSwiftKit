@@ -21,7 +21,7 @@ open class TWLAlertView: TWLView {
         maskBtn.alpha = 0.0
         maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
         showView.addSubview(maskBtn)
-        maskBtn.frame = showView.bounds ?? .zero
+        maskBtn.frame = showView.bounds
         
         maskBtn.addSubview(self)
         self.center = maskBtn.center

@@ -13,7 +13,7 @@ open class TWLBaseAlertView: TWLView {
     public var touchDismiss = false
     public var cancelClosure:() -> Void = {}
     
-    public func show(from: UIView?, on: UIView? = nil) {
+    func show(from: UIView?, on: UIView? = nil) {
         let maskBtn = TWLButton(type: .custom)
         let window = on != nil ? on : UIApplication.shared.twlKeyWindow
         if on != nil {
@@ -57,7 +57,7 @@ open class TWLBaseAlertView: TWLView {
     }
     
     
-    public func dismiss() {
+    func dismiss() {
         UIView.animate(withDuration: 0.3) {
             self.superview?.alpha = 0.0
         } completion: { _ in
