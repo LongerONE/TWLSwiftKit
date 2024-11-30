@@ -12,6 +12,8 @@ public let TWLScreenWidth = UIScreen.main.bounds.size.width
 @MainActor
 public let TWLScreenHeight = UIScreen.main.bounds.size.height
 @MainActor
+public let TWLScreenScale = UIScreen.main.scale
+@MainActor
 public let TWLOnePixelHeight = 1.0 / UIScreen.main.scale
 
 

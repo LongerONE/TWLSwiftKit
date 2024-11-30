@@ -32,7 +32,7 @@ open class TWLAlertView: TWLView {
     }
     
     
-    public func dismiss() {
+    @objc public func dismiss() {
         UIView.animate(withDuration: 0.3) {
             self.superview?.alpha = 0.0
         } completion: { _ in
