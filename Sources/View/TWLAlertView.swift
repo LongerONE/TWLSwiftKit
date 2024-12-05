@@ -76,7 +76,7 @@ open class TWLAlertView: TWLView {
     }
     
     
-    @objc func maskTapAction() {
+    @objc open func maskTapAction() {
         if canTapMaskDismss {
             dismiss()
         }
