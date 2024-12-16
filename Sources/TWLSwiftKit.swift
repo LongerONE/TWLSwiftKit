@@ -90,4 +90,14 @@ public var twlWindowSafeBottom: CGFloat {
 
 
 
-
+@MainActor
+public var twlStatusBarHeight: CGFloat {
+    get {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+            return statusBarHeight
+        }
+        
+        return UIApplication.shared.statusBarFrame.height
+    }
+}
