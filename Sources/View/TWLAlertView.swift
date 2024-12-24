@@ -19,8 +19,22 @@ open class TWLAlertView: TWLView {
     private var position: TWLAlertPositionType = .center
     
     public var maskAlpha = 0.72
-    
     public var canTapMaskDismss = false
+    public var adoptKeyboard = false
+    
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @MainActor
+    required public init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+    }
     
     public func showCenterFade(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
@@ -40,7 +54,6 @@ open class TWLAlertView: TWLView {
             maskBtn.alpha = 1.0
         }
     }
-    
     
     public func showBottom(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
@@ -82,4 +95,34 @@ open class TWLAlertView: TWLView {
         }
     }
     
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            adjustScrollViewForKeyboard(show: true, keyboardHeight: keyboardHeight)
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        adjustScrollViewForKeyboard(show: false, keyboardHeight: 0)
+    }
+    
+    func adjustScrollViewForKeyboard(show: Bool, keyboardHeight: CGFloat) {
+        guard adoptKeyboard else { return }
+        UIView.animate(withDuration: 0.5) {
+            if keyboardHeight == 0 {
+                self.center = self.superview!.center
+            } else {
+                if (TWLScreenHeight - self.twl.height) * 0.5 < keyboardHeight {
+                    let offset = keyboardHeight - (TWLScreenHeight - self.twl.height) * 0.5
+                    self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5  - offset - 10
+                }
+            }
+        }
+    }
+    
+    // 移除监听器
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
