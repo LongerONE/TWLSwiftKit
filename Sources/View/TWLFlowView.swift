@@ -7,9 +7,9 @@ import UIKit
 
 public protocol TWLFlowViewDataSouce: NSObjectProtocol {
     
-    func numberOfViews() -> Int
+    func numberOfViews(flowView: TWLFlowView) -> Int
     
-    func viewForIndex(index: Int) -> UIView
+    func viewForIndex(flowView: TWLFlowView, index: Int) -> UIView
 }
 
 open class TWLFlowView: UIView {
@@ -32,7 +32,7 @@ open class TWLFlowView: UIView {
         }
         
         if dataSource != nil {
-            count = dataSource!.numberOfViews()
+            count = dataSource!.numberOfViews(flowView: self)
         } else {
             count = numberClosure()
         }
@@ -51,7 +51,7 @@ open class TWLFlowView: UIView {
         for index in 0..<count {
             var currentView: UIView!
             if dataSource != nil {
-                currentView = dataSource!.viewForIndex(index: index)
+                currentView = dataSource!.viewForIndex(flowView: self, index: index)
             } else {
                 currentView = viewClosure(index)
             }
