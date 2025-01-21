@@ -55,8 +55,6 @@ open class TWLFlowView: UIView {
             } else {
                 currentView = viewClosure(index)
             }
-            currentView.layoutIfNeeded()
-            currentView.sizeToFit()
             addSubview(currentView)
             layoutIfNeeded()
             

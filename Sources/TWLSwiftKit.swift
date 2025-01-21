@@ -19,7 +19,12 @@ public let TWLOnePixelHeight = 1.0 / UIScreen.main.scale
 
 public func TWLDPrint(_ item: Any) {
     #if DEBUG
-    print(item)
+    let formatter = DateFormatter()
+    formatter.locale = Locale.current
+    formatter.timeZone = TimeZone.current
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
+    let dateString = formatter.string(from: Date())
+    print("\(dateString) >>>>>>>>>>>>>>>>>>>>>>\n\(item)")
     #endif
 }
 
