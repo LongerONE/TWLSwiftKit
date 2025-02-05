@@ -75,13 +75,36 @@ open class TWLAlertView: TWLView {
         }
     }
     
+    public func showTop(on: UIView? = nil) {
+        guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
+        position = .bottom
+        
+        let maskBtn = UIButton(type: .custom)
+        maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
+        maskBtn.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+        showView.addSubview(maskBtn)
+        maskBtn.frame = showView.bounds
+        
+        maskBtn.addSubview(self)
+        self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
+        self.twl.y = -self.twl.height
+        
+        UIView.animate(withDuration: 0.3) {
+            maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+            self.twl.y = 0
+        }
+    }
+    
     @objc public func dismiss() {
         UIView.animate(withDuration: 0.3) {
             if self.position == .center {
                 self.superview?.alpha = 0.0
-            } else {
+            } else if self.position == .bottom {
                 self.superview?.backgroundColor = UIColor.black.withAlphaComponent(0.0)
                 self.twl.y = self.superview?.twl.height ?? TWLScreenHeight
+            } else {
+                self.superview?.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+                self.twl.y = -self.twl.height
             }
         } completion: { _ in
             self.superview?.removeFromSuperview()
