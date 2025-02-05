@@ -111,7 +111,11 @@ open class TWLAlertView: TWLView {
         guard adoptKeyboard else { return }
         UIView.animate(withDuration: 0.5) {
             if keyboardHeight == 0 {
-                self.center = self.superview!.center
+                if self.position == .center {
+                    self.center = self.superview!.center
+                } else {
+                    self.twl.y = (self.superview?.twl.height ?? 0.0) - self.twl.height + self.layer.cornerRadius
+                }
             } else {
                 if (TWLScreenHeight - self.twl.height) * 0.5 < keyboardHeight {
                     let offset = keyboardHeight - (TWLScreenHeight - self.twl.height) * 0.5
