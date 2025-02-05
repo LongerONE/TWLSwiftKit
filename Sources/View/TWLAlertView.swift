@@ -11,6 +11,7 @@ import UIKit
 enum TWLAlertPositionType: Int {
     case center
     case bottom
+    case top
 }
 
 
@@ -77,7 +78,7 @@ open class TWLAlertView: TWLView {
     
     public func showTop(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
-        position = .bottom
+        position = .top
         
         let maskBtn = UIButton(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
