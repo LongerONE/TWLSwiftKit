@@ -37,11 +37,25 @@ open class TWLAlertView: TWLView {
         
     }
     
+    
+    public class func showing(on: UIView? = nil) -> Bool {
+        guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return false}
+        for subview in showView.subviews {
+            if subview.isKind(of: TWLMaskBtn.self), let alertView = subview.subviews.first {
+                if alertView is Self {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
     public func showCenterFade(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .center
         
-        let maskBtn = UIButton(type: .custom)
+        let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
         maskBtn.alpha = 0.0
         maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
@@ -60,7 +74,7 @@ open class TWLAlertView: TWLView {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .bottom
         
-        let maskBtn = UIButton(type: .custom)
+        let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
         maskBtn.backgroundColor = UIColor.black.withAlphaComponent(0.0)
         showView.addSubview(maskBtn)
@@ -80,7 +94,7 @@ open class TWLAlertView: TWLView {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .top
         
-        let maskBtn = UIButton(type: .custom)
+        let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
         maskBtn.backgroundColor = UIColor.black.withAlphaComponent(0.0)
         showView.addSubview(maskBtn)
