@@ -16,6 +16,7 @@ open class TWLFlowView: UIView {
     
     open weak var dataSource: TWLFlowViewDataSouce? // 数据源优先于闭包
     
+    open var useAutoLayout = false
     open var innerSpace: CGFloat = 0.0           // 元素间距
     open var lineSpace: CGFloat = 0.0            // 元素行距
     open var contentInset: UIEdgeInsets = .zero  // 内容边距
@@ -69,9 +70,17 @@ open class TWLFlowView: UIView {
                 }
             }
             
-            
-            currentView.twl.x = left
-            currentView.twl.y = top
+            if useAutoLayout {
+                currentView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left),
+                    currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: top)
+                ])
+            } else {
+                currentView.twl.x = left
+                currentView.twl.y = top
+            }
+
 
             left += currentView.twl.width
             
