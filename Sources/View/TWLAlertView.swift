@@ -152,15 +152,36 @@ open class TWLAlertView: TWLView {
                 if self.position == .center {
                     self.center = self.superview!.center
                 } else {
-                    self.twl.y = (self.superview?.twl.height ?? 0.0) - self.twl.height + self.layer.cornerRadius
+                    self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius
                 }
             } else {
-                if (TWLScreenHeight - self.twl.height) * 0.5 < keyboardHeight {
-                    let offset = keyboardHeight - (TWLScreenHeight - self.twl.height) * 0.5
-                    self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5  - offset - 10
+                if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
+                    let frameOfScreen = responder.convert(responder.bounds, to: window)
+                    if frameOfScreen.origin.y + frameOfScreen.size.height > window.bounds.size.height - keyboardHeight {
+                        let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - 20)
+                        if self.position == .center {
+                            self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
+                        } else {
+                            self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet
+                        }
+                    } 
                 }
             }
         }
+    }
+    
+    func findFirstResponder(in view: UIView) -> UIView? {
+        if view.isFirstResponder {
+            return view
+        }
+        
+        for subview in view.subviews {
+            if let firstResponder = findFirstResponder(in: subview) {
+                return firstResponder
+            }
+        }
+        
+        return nil
     }
     
     // 移除监听器
