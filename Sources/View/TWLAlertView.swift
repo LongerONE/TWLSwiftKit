@@ -158,7 +158,7 @@ open class TWLAlertView: TWLView {
                 if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
                     let frameOfScreen = responder.convert(responder.bounds, to: window)
                     if frameOfScreen.origin.y + frameOfScreen.size.height > window.bounds.size.height - keyboardHeight {
-                        let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - 20)
+                        let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - frameOfScreen.size.height - 20)
                         if self.position == .center {
                             self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
                         } else {
