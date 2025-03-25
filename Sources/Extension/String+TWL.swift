@@ -67,7 +67,7 @@ public extension String {
         }
         
         
-        func addQuery(key:String, value: String) -> String {
+        public func addQuery(key:String, value: String) -> String {
             if self.string.contains("?") {
                 return "\(self.string)&\(key)=\(value)"
             } else {
