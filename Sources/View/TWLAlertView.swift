@@ -14,10 +14,17 @@ enum TWLAlertPositionType: Int {
     case top
 }
 
+enum TWLAlertAnimateType: Int {
+    case fade
+    case zoom
+    case move
+}
+
 
 open class TWLAlertView: TWLView {
     
     private var position: TWLAlertPositionType = .center
+    private var animateType: TWLAlertAnimateType = .fade
     
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
@@ -54,6 +61,7 @@ open class TWLAlertView: TWLView {
     public func showCenterFade(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .center
+        animateType = .fade
         
         let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
@@ -73,6 +81,7 @@ open class TWLAlertView: TWLView {
     public func showBottom(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .bottom
+        animateType = .move
         
         let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
@@ -93,6 +102,7 @@ open class TWLAlertView: TWLView {
     public func showTop(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .top
+        animateType = .move
         
         let maskBtn = TWLMaskBtn(type: .custom)
         maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
@@ -110,7 +120,61 @@ open class TWLAlertView: TWLView {
         }
     }
     
+    
+    public func showCenterZoom(on: UIView? = nil) {
+        guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
+        position = .center
+        animateType = .zoom
+        
+        let maskBtn = TWLMaskBtn(type: .custom)
+        maskBtn.addTarget(self, action: #selector(maskTapAction), for: .touchUpInside)
+        maskBtn.alpha = 0.0
+        maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+        showView.addSubview(maskBtn)
+        maskBtn.frame = showView.bounds
+        
+        maskBtn.addSubview(self)
+        self.alpha = 0
+        self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        self.center = maskBtn.center
+        
+        UIView.animate(
+            withDuration: 0.9,
+            delay: 0,
+            usingSpringWithDamping: 0.5,   // 阻尼系数（0-1，越小弹性越强）
+            initialSpringVelocity: 0.6,   // 初始速度
+            options: .curveEaseInOut,
+            animations: {
+                maskBtn.alpha = 1
+                self.alpha = 1
+                self.transform = .identity
+            },
+            completion: nil
+        )
+    }
+    
+    
     @objc public func dismiss() {
+        if position == .center, animateType == .zoom {
+            UIView.animate(
+                withDuration: 1.0,
+                        delay: 0,
+                        usingSpringWithDamping: 0.5,  // 更小的阻尼系数（弹性更强）
+                        initialSpringVelocity: 0.7,   // 更高的初始速度
+                        options: .curveEaseIn,
+                        animations: {
+                            self.alpha = 0
+                            self.superview?.alpha = 0
+                            self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                        },
+                        completion: { _ in
+                            self.superview?.removeFromSuperview()
+                        }
+                    )
+            return
+        }
+        
+        
         UIView.animate(withDuration: 0.3) {
             if self.position == .center {
                 self.superview?.alpha = 0.0
