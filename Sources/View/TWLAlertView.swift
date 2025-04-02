@@ -31,11 +31,24 @@ open class TWLAlertView: TWLView {
     public var adoptKeyboard = false
     
     
+    private var pendingKeyboardAdjustment: DispatchWorkItem?
+    private var lastKeyboardHeight: CGFloat = 0
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillChange(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
     }
     
     @MainActor
@@ -120,7 +133,6 @@ open class TWLAlertView: TWLView {
         }
     }
     
-    
     public func showCenterZoom(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .center
@@ -153,24 +165,23 @@ open class TWLAlertView: TWLView {
         )
     }
     
-    
     @objc public func dismiss() {
         if position == .center, animateType == .zoom {
             UIView.animate(
                 withDuration: 1.0,
-                        delay: 0,
-                        usingSpringWithDamping: 0.5,  // 更小的阻尼系数（弹性更强）
-                        initialSpringVelocity: 0.7,   // 更高的初始速度
-                        options: .curveEaseIn,
-                        animations: {
-                            self.alpha = 0
-                            self.superview?.alpha = 0
-                            self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        },
-                        completion: { _ in
-                            self.superview?.removeFromSuperview()
-                        }
-                    )
+                delay: 0,
+                usingSpringWithDamping: 0.5,  // 更小的阻尼系数（弹性更强）
+                initialSpringVelocity: 0.7,   // 更高的初始速度
+                options: .curveEaseIn,
+                animations: {
+                    self.alpha = 0
+                    self.superview?.alpha = 0
+                    self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                },
+                completion: { _ in
+                    self.superview?.removeFromSuperview()
+                }
+            )
             return
         }
         
@@ -197,41 +208,76 @@ open class TWLAlertView: TWLView {
         }
     }
     
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            let keyboardHeight = keyboardFrame.height
-            adjustScrollViewForKeyboard(show: true, keyboardHeight: keyboardHeight)
-        }
-    }
-
-    @objc func keyboardWillHide(_ notification: Notification) {
-        adjustScrollViewForKeyboard(show: false, keyboardHeight: 0)
-    }
-    
-    func adjustScrollViewForKeyboard(show: Bool, keyboardHeight: CGFloat) {
+    @objc private func keyboardWillChange(_ notification: Notification) {
         guard adoptKeyboard else { return }
-        UIView.animate(withDuration: 0.5) {
-            if keyboardHeight == 0 {
-                if self.position == .center {
-                    self.center = self.superview!.center
+        
+        pendingKeyboardAdjustment?.cancel()
+        
+        let adjustmentTask = DispatchWorkItem { [weak self] in
+            self?.adjustLayoutWithKeyboard(notification)
+        }
+
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.1,
+            execute: adjustmentTask
+        )
+        pendingKeyboardAdjustment = adjustmentTask
+    }
+    
+    private func adjustLayoutWithKeyboard(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+              let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
+        else { return }
+
+        let convertedFrame = self.convert(keyboardFrame, from: nil)
+        let keyboardHeight = max(self.bounds.maxY - convertedFrame.minY, 0)
+        TWLDPrint("键盘高度：\(keyboardHeight)")
+        self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        guard adoptKeyboard else { return }
+        
+        guard let userInfo = notification.userInfo,
+              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+              let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
+        else { return }
+        self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: 0)
+    }
+    
+    
+    func adjustScrollViewForKeyboard(duration: TimeInterval, curve: UInt, keyboardHeight: CGFloat) {
+        guard abs(keyboardHeight - lastKeyboardHeight) > 1 else { return }
+        lastKeyboardHeight = keyboardHeight
+        
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: UIView.AnimationOptions(rawValue: curve << 16),
+            animations: {
+                if keyboardHeight == 0 {
+                    if self.position == .center {
+                        self.center = self.superview!.center
+                    } else {
+                        self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius
+                    }
                 } else {
-                    self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius
-                }
-            } else {
-                if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
-                    let frameOfScreen = responder.convert(responder.bounds, to: window)
-                    if frameOfScreen.origin.y + frameOfScreen.size.height > window.bounds.size.height - keyboardHeight {
-                        let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - frameOfScreen.size.height - 20)
-                        if self.position == .center {
-                            self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
-                        } else {
-                            self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet
+                    if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
+                        let frameOfScreen = responder.convert(responder.bounds, to: window)
+                        if frameOfScreen.origin.y + frameOfScreen.size.height > window.bounds.size.height - keyboardHeight {
+                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - frameOfScreen.size.height - 20)
+                            if self.position == .center {
+                                self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
+                            } else {
+                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet
+                            }
                         }
-                    } 
+                    }
                 }
             }
-        }
+        )
     }
     
     func findFirstResponder(in view: UIView) -> UIView? {

@@ -24,7 +24,7 @@ public func TWLDPrint(_ item: Any) {
     formatter.timeZone = TimeZone.current
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
     let dateString = formatter.string(from: Date())
-    print("\(dateString) >>>>>>>>>>>>>>>>>>>>>>\n\(item)")
+    print("\(dateString) [TWLSwiftKit]\n\(item)")
     #endif
 }
 
