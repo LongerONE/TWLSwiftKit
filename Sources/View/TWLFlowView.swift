@@ -57,8 +57,7 @@ open class TWLFlowView: UIView {
                 currentView = viewClosure(index)
             }
             addSubview(currentView)
-            layoutIfNeeded()
-            
+
             if twl.width - left - innerSpace - contentInset.right < currentView.twl.width {
                 // 右边距离不够，换行
                 left = contentInset.left
