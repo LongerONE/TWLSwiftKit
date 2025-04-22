@@ -93,13 +93,13 @@ open class TWLFlowView: UIView {
                     
                     if index % colCount == (colCount - 1) {
                         NSLayoutConstraint.activate([
-                            currentView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: contentInset.right),
+                            currentView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -contentInset.right),
                         ])
                     }
                     
                     if useContentsHeight && index == (count - 1) {
                         NSLayoutConstraint.activate([
-                            currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: contentInset.bottom)
+                            currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
                         ])
                     }
                 } else {
