@@ -29,10 +29,12 @@ open class TWLAlertView: TWLView {
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
     public var adoptKeyboard = false
-    
+    public var keybordTopSpace: CGFloat = 60.0
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
+    private var dismissing = false
+    
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,6 +51,13 @@ open class TWLAlertView: TWLView {
             name: UIResponder.keyboardWillChangeFrameNotification,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textFieldDidBeginEditingNotification(_:)),
+            name: UITextField.textDidBeginEditingNotification,
+            object: nil
+        )
     }
     
     @MainActor
@@ -57,12 +66,14 @@ open class TWLAlertView: TWLView {
         
     }
     
-    
     public class func showing(on: UIView? = nil) -> Bool {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return false}
         for subview in showView.subviews {
-            if subview.isKind(of: TWLMaskBtn.self), let alertView = subview.subviews.first {
+            if subview.isKind(of: TWLMaskBtn.self), let alertView = subview.subviews.first as? TWLAlertView {
                 if alertView is Self {
+                    if alertView.dismissing {
+                        return false
+                    }
                     return true
                 }
             }
@@ -166,6 +177,7 @@ open class TWLAlertView: TWLView {
     }
     
     @objc public func dismiss() {
+        dismissing = true
         if position == .center, animateType == .zoom {
             UIView.animate(
                 withDuration: 1.0,
@@ -224,6 +236,12 @@ open class TWLAlertView: TWLView {
         pendingKeyboardAdjustment = adjustmentTask
     }
     
+    @objc private func textFieldDidBeginEditingNotification(_ note: Notification) {
+        guard adoptKeyboard else { return }
+        
+        self.adjustScrollViewForKeyboard(duration: 0.3, curve: 3, keyboardHeight: lastKeyboardHeight)
+    }
+    
     private func adjustLayoutWithKeyboard(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
@@ -234,6 +252,7 @@ open class TWLAlertView: TWLView {
         let convertedFrame = self.convert(keyboardFrame, from: nil)
         let keyboardHeight = max(self.bounds.maxY - convertedFrame.minY, 0)
         TWLDPrint("键盘高度：\(keyboardHeight)")
+        guard abs(keyboardHeight - lastKeyboardHeight) > 1 else { return }
         self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
     }
     
@@ -247,11 +266,9 @@ open class TWLAlertView: TWLView {
         self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: 0)
     }
     
-    
     func adjustScrollViewForKeyboard(duration: TimeInterval, curve: UInt, keyboardHeight: CGFloat) {
-        guard abs(keyboardHeight - lastKeyboardHeight) > 1 else { return }
         lastKeyboardHeight = keyboardHeight
-        
+
         UIView.animate(
             withDuration: duration,
             delay: 0,
@@ -266,8 +283,8 @@ open class TWLAlertView: TWLView {
                 } else {
                     if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
                         let frameOfScreen = responder.convert(responder.bounds, to: window)
-                        if frameOfScreen.origin.y + frameOfScreen.size.height > window.bounds.size.height - keyboardHeight {
-                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height - frameOfScreen.size.height - 20)
+                        if frameOfScreen.origin.y + frameOfScreen.size.height + self.keybordTopSpace > window.bounds.size.height - keyboardHeight {
+                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height  - self.keybordTopSpace)
                             if self.position == .center {
                                 self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
                             } else {
@@ -280,7 +297,7 @@ open class TWLAlertView: TWLView {
         )
     }
     
-    func findFirstResponder(in view: UIView) -> UIView? {
+    private func findFirstResponder(in view: UIView) -> UIView? {
         if view.isFirstResponder {
             return view
         }
