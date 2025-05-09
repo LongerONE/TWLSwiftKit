@@ -29,7 +29,7 @@ open class TWLAlertView: TWLView {
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
     public var adoptKeyboard = false
-    public var keybordTopSpace: CGFloat = 60.0
+    public var keybordTopSpace: CGFloat = 20.0
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
