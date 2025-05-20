@@ -35,6 +35,8 @@ open class TWLAlertView: TWLView {
     private var lastKeyboardHeight: CGFloat = 0
     private var dismissing = false
     
+    public var dismissClosure: () -> Void = {}
+    
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -217,6 +219,7 @@ open class TWLAlertView: TWLView {
     @objc open func maskTapAction() {
         if canTapMaskDismss {
             dismiss()
+            dismissClosure()
         }
     }
     
