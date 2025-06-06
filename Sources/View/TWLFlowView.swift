@@ -59,12 +59,13 @@ open class TWLFlowView: UIView {
             }
             addSubview(currentView)
             if useAutoLayout {
+                currentView.setNeedsLayout()
                 currentView.layoutIfNeeded()
                 currentView.translatesAutoresizingMaskIntoConstraints = false
+                self.layoutSubviews()
             }
             
-            
-            
+ 
             if colCount > 0 {
                 // 固定列数
                 if useAutoLayout {
@@ -88,8 +89,6 @@ open class TWLFlowView: UIView {
                         NSLayoutConstraint.activate([
                             currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left),
                             currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: contentInset.top)
-                            
-
                         ])
                         
                         if count < colCount {
@@ -122,8 +121,6 @@ open class TWLFlowView: UIView {
                         twl.height = currentView.twl.y + currentView.twl.height + contentInset.bottom
                     }
                 }
-                
-                preView = currentView
             } else {
                 // 按实际大小依次排
                 if twl.width - left - innerSpace - contentInset.right < currentView.twl.width {
@@ -153,8 +150,16 @@ open class TWLFlowView: UIView {
                 if index == count - 1 {
                     showHeight = top + currentView.twl.height + contentInset.bottom
                     twl.height = showHeight
+                    
+                    if useContentsHeight {
+                        NSLayoutConstraint.activate([
+                            currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
+                        ])
+                    }
                 }
             }
+
+            preView = currentView
         }
         
         if useAutoLayout {
