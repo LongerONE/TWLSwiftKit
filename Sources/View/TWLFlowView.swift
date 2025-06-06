@@ -88,7 +88,17 @@ open class TWLFlowView: UIView {
                         NSLayoutConstraint.activate([
                             currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left),
                             currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: contentInset.top)
+                            
+
                         ])
+                        
+                        if count < colCount {
+                            // 不足一行，手动指定宽度
+                            NSLayoutConstraint.activate([
+                                // 宽度为父视图的三分之一
+                                currentView.widthAnchor.constraint(equalTo: currentView.superview!.widthAnchor, multiplier: 1.0/CGFloat(colCount)),
+                            ])
+                        }
                     }
                     
                     if index % colCount == (colCount - 1) {
