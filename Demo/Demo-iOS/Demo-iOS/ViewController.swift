@@ -7,6 +7,7 @@
 
 import UIKit
 import TWLSwiftKit
+import SnapKit
 
 class ViewController: UIViewController {
 
@@ -61,22 +62,49 @@ class ViewController: UIViewController {
         flowView.twl.x = 50
         flowView.twl.y = 100
         flowView.reloadViews()
+        
+        
+        let autoFlowView = TWLAutoFlowView()
+        autoFlowView.backgroundColor = UIColor.green.withAlphaComponent(0.6)
+        autoFlowView.innerSpace = 15
+        autoFlowView.lineSpace = 12
+//        autoFlowView.colCount = 3
+        autoFlowView.useAutoLayout = true
+        autoFlowView.useContentsHeight = true
+        autoFlowView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+        view.addSubview(autoFlowView)
+        autoFlowView.twl.width  = 300
+        autoFlowView.twl.x = 50
+        autoFlowView.twl.y = 400
+        
+        for index in 0...10 {
+//            let view = UIView()
+//            view.backgroundColor = UIColor.red.withAlphaComponent(0.2)
+//            view.snp.makeConstraints { make in
+//                make.height.equalTo(20)
+//            }
+//            autoFlowView.addArrangedSubview(view)
+            
+            let lbl = UILabel()
+            lbl.textAlignment = .center
+            lbl.translatesAutoresizingMaskIntoConstraints = false
+            lbl.text = "\(index)\(index)\(index)"
+            autoFlowView.addArrangedSubview(lbl)
+        }
     }
     
 }
 
 extension ViewController: TWLFlowViewDataSouce {
-    func numberOfViews() -> Int {
-        
+    func numberOfViews(flowView: TWLSwiftKit.TWLFlowView) -> Int {
         return 10
     }
     
-    func viewForIndex(index: Int) -> UIView {
+    func viewForIndex(flowView: TWLSwiftKit.TWLFlowView, index: Int) -> UIView {
         let lbl = UILabel()
         lbl.text = "\(index) \(index) \(index) \(index) \(index)"
         lbl.backgroundColor = "795579".twl.color?.withAlphaComponent(0.4)
+        lbl.sizeToFit()
         return lbl
     }
-    
-    
 }

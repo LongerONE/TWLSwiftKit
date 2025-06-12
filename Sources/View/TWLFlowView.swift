@@ -139,6 +139,12 @@ open class TWLFlowView: UIView {
                         currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left),
                         currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: top)
                     ])
+                    
+                    if currentView.twl.width > twl.width - contentInset.left - contentInset.right {
+                        NSLayoutConstraint.activate([
+                            currentView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -contentInset.left-contentInset.right),
+                        ])
+                    }
                 } else {
                     currentView.twl.x = left
                     currentView.twl.y = top
