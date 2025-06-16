@@ -33,57 +33,69 @@ open class TWLAutoFlowView: UIView {
         var top: CGFloat = contentInset.top
         var left: CGFloat = contentInset.left
         var preView: UIView?
-        
-        for constraint in allConstraints {
-            removeConstraint(constraint)
-        }
-        allConstraints = []
-        
+                
         for (index, currentView) in subviews.enumerated() {
+            currentView.removeConstraints(currentView.constraints)
+            currentView.sizeToFit()
+            
+            if useAutoLayout {
+                currentView.translatesAutoresizingMaskIntoConstraints = false
+            }
+            
             if colCount > 0 {
                 // 固定列数
                 if useAutoLayout {
                     if let preView = preView {
                         if colCount > 1 {
-                            let widthConstraint = currentView.widthAnchor.constraint(equalTo: preView.widthAnchor)
-                            allConstraints.append(widthConstraint)
+                            NSLayoutConstraint.activate([
+                                currentView.widthAnchor.constraint(equalTo: preView.widthAnchor)
+                            ])
                         }
 
                         if index % colCount == 0 {
-                            let leadingConstraint = currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left)
-                            allConstraints.append(leadingConstraint)
-                            let topConstraint = currentView.topAnchor.constraint(equalTo: preView.bottomAnchor, constant: lineSpace)
-                            allConstraints.append(topConstraint)
+                            // 最左侧
+                            NSLayoutConstraint.activate([
+                                currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left),
+                                currentView.topAnchor.constraint(equalTo: preView.bottomAnchor, constant: lineSpace)
+                            ])
                         } else {
-                            let leadingConstraint = currentView.leadingAnchor.constraint(equalTo: preView.trailingAnchor, constant: innerSpace)
-                            allConstraints.append(leadingConstraint)
-                            let topConstraint = currentView.topAnchor.constraint(equalTo: preView.topAnchor)
-                            allConstraints.append(topConstraint)
+                            NSLayoutConstraint.activate([
+                                currentView.leadingAnchor.constraint(equalTo: preView.trailingAnchor, constant: innerSpace),
+                                currentView.topAnchor.constraint(equalTo: preView.topAnchor)
+                            ])
                         }
                     } else {
                         // 第一个
-                        let leadingConstraint = currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left)
-                        allConstraints.append(leadingConstraint)
-                        let topConstraint = currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: contentInset.top)
-                        allConstraints.append(topConstraint)
-                        
+                        NSLayoutConstraint.activate([
+                            currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: contentInset.left),
+                            currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: contentInset.top)
+                        ])
+
                         if count < colCount {
                             // 不足一行，手动指定宽度
-                            let widthConstraint = currentView.widthAnchor.constraint(equalTo: currentView.superview!.widthAnchor, multiplier: 1.0/CGFloat(colCount))
-                            allConstraints.append(widthConstraint)
+                            NSLayoutConstraint.activate([
+                                currentView.widthAnchor.constraint(equalTo: currentView.superview!.widthAnchor, multiplier: 1.0 / CGFloat(colCount))
+                            ])
                         }
                     }
                     
-                    if index % colCount == (colCount - 1) && count > 1 {
+                    if index % colCount == (colCount - 1) {
                         // 最右侧
-                        let trailingConstrait = currentView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -contentInset.right)
-                        allConstraints.append(trailingConstrait)
+                        NSLayoutConstraint.activate([
+                            currentView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -contentInset.right)
+                        ])
                     }
                     
                     if useContentsHeight && index == (count - 1) {
                         // 最后一个
-                        let bottomConstraint = currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
-                        allConstraints.append(bottomConstraint)
+                        NSLayoutConstraint.activate([
+                            currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
+                        ])
+                        
+                        currentView.layoutIfNeeded()
+                        
+                        showHeight = currentView.twl.y + currentView.twl.height + contentInset.bottom
+                        twl.height = showHeight
                     }
                 } else {
                     let width = (twl.width - CGFloat(colCount - 1) * innerSpace - contentInset.left - contentInset.right) / CGFloat(colCount)
@@ -109,27 +121,28 @@ open class TWLAutoFlowView: UIView {
                 }
                 
                 if useAutoLayout {
-                    let leadingConstraint = currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left)
-                    allConstraints.append(leadingConstraint)
-                    let topConstraint = currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: top)
-                    allConstraints.append(topConstraint)
+                    NSLayoutConstraint.activate([
+                        currentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left),
+                        currentView.topAnchor.constraint(equalTo: self.topAnchor, constant: top)
+                    ])
                 } else {
                     currentView.twl.x = left
                     currentView.twl.y = top
                 }
                 
-                
                 left += currentView.twl.width
                 
                 if index == count - 1 {
+                    showHeight = top + currentView.twl.height + contentInset.bottom
+                    
                     if useContentsHeight {
                         if useAutoLayout {
-                            let bottomConstraint = currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
-                            allConstraints.append(bottomConstraint)
-                        } else {
-                            showHeight = top + currentView.twl.height + contentInset.bottom
-                            twl.height = showHeight
+                            NSLayoutConstraint.activate([
+                                currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
+                            ])
                         }
+                    
+                        twl.height = showHeight
                     }
                 }
             }
@@ -137,14 +150,14 @@ open class TWLAutoFlowView: UIView {
             preView = currentView
         }
         
-        if useAutoLayout {
-            NSLayoutConstraint.activate(allConstraints)
+        
+        if useAutoLayout && colCount > 0 {
+            layoutIfNeeded()
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         
     }
     

@@ -55,6 +55,7 @@ class ViewController: UIViewController {
         flowView.backgroundColor = "C5feg6".twl.color
         flowView.innerSpace = 10
         flowView.lineSpace = 20
+        flowView.colCount = 3
         flowView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         flowView.dataSource = self
         view.addSubview(flowView)
@@ -66,30 +67,25 @@ class ViewController: UIViewController {
         
         let autoFlowView = TWLAutoFlowView()
         autoFlowView.backgroundColor = UIColor.green.withAlphaComponent(0.6)
+        autoFlowView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         autoFlowView.innerSpace = 15
         autoFlowView.lineSpace = 12
-//        autoFlowView.colCount = 3
+        autoFlowView.colCount = 4
         autoFlowView.useAutoLayout = true
         autoFlowView.useContentsHeight = true
-        autoFlowView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+        
         view.addSubview(autoFlowView)
-        autoFlowView.twl.width  = 300
+        autoFlowView.twl.width  = 350
         autoFlowView.twl.x = 50
         autoFlowView.twl.y = 400
         
-        for index in 0...10 {
-//            let view = UIView()
-//            view.backgroundColor = UIColor.red.withAlphaComponent(0.2)
-//            view.snp.makeConstraints { make in
-//                make.height.equalTo(20)
-//            }
-//            autoFlowView.addArrangedSubview(view)
-            
+        for index in 0..<19 {
             let lbl = UILabel()
             lbl.textAlignment = .center
-            lbl.translatesAutoresizingMaskIntoConstraints = false
             lbl.text = "\(index)\(index)\(index)"
+//            lbl.sizeToFit()
             autoFlowView.addArrangedSubview(lbl)
+            print("\(lbl.text ?? "")")
         }
     }
     
