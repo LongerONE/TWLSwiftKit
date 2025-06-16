@@ -28,19 +28,26 @@ open class TWLAutoFlowView: UIView {
     }
     
     
-    open func updateSubviewLayout() {
+    open func updateSubviewsLayout() {
+        TWLDPrint("[TWLAutoFlowView]开始自动处理布局...")
+        
         var count: Int = subviews.count
         var top: CGFloat = contentInset.top
         var left: CGFloat = contentInset.left
         var preView: UIView?
                 
-        for (index, currentView) in subviews.enumerated() {
-            currentView.removeConstraints(currentView.constraints)
-            currentView.sizeToFit()
+        let allViews = subviews
+        removeSubviews()
+        for (index, currentView) in allViews.enumerated() {
+            addSubview(currentView)
             
             if useAutoLayout {
                 currentView.translatesAutoresizingMaskIntoConstraints = false
+            } else {
+                currentView.translatesAutoresizingMaskIntoConstraints = true
             }
+
+            currentView.sizeToFit()
             
             if colCount > 0 {
                 // 固定列数
@@ -63,6 +70,7 @@ open class TWLAutoFlowView: UIView {
                                 currentView.leadingAnchor.constraint(equalTo: preView.trailingAnchor, constant: innerSpace),
                                 currentView.topAnchor.constraint(equalTo: preView.topAnchor)
                             ])
+                            currentView
                         }
                     } else {
                         // 第一个
@@ -91,9 +99,7 @@ open class TWLAutoFlowView: UIView {
                         NSLayoutConstraint.activate([
                             currentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -contentInset.bottom)
                         ])
-                        
-                        currentView.layoutIfNeeded()
-                        
+
                         showHeight = currentView.twl.y + currentView.twl.height + contentInset.bottom
                         twl.height = showHeight
                     }
@@ -104,7 +110,8 @@ open class TWLAutoFlowView: UIView {
                     currentView.twl.y = floor(CGFloat(index) / CGFloat(colCount)) * (currentView.twl.height + lineSpace) + contentInset.top
                     
                     if useContentsHeight && index == count - 1 {
-                        twl.height = currentView.twl.y + currentView.twl.height + contentInset.bottom
+                        showHeight = currentView.twl.y + currentView.twl.height + contentInset.bottom
+                        twl.height = showHeight
                     }
                 }
             } else {
@@ -149,11 +156,6 @@ open class TWLAutoFlowView: UIView {
             
             preView = currentView
         }
-        
-        
-        if useAutoLayout && colCount > 0 {
-            layoutIfNeeded()
-        }
     }
     
     override init(frame: CGRect) {
@@ -169,7 +171,7 @@ open class TWLAutoFlowView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        updateSubviewLayout()
+
     }
 }
 
