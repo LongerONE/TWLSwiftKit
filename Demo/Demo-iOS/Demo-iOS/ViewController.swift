@@ -11,8 +11,9 @@ import TWLSwiftKit
 class ViewController: UIViewController {
 
     var confs: [String: String] = [
+        "AutoFlow": "AutoFlowController",
         "String": "StringController",
-        "AutoFlow": "AutoFlowController"
+        "TextView": "TextViewController"
     ]
     
     @IBOutlet weak var tableView: UITableView!
