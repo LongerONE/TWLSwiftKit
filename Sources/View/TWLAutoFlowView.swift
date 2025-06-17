@@ -160,18 +160,14 @@ open class TWLAutoFlowView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        useAutoLayout = true
+        useContentsHeight = true
     }
     
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
-        
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        
-
+        useAutoLayout = true
+        useContentsHeight = true
     }
 }
 
