@@ -157,7 +157,6 @@ open class TWLAlertView: TWLView {
         maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
         showView.addSubview(maskBtn)
         maskBtn.frame = showView.bounds
-        
         maskBtn.addSubview(self)
         self.alpha = 0
         self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
@@ -170,12 +169,18 @@ open class TWLAlertView: TWLView {
             initialSpringVelocity: 0.6,   // 初始速度
             options: .curveEaseInOut,
             animations: {
-                maskBtn.alpha = 1
-                self.alpha = 1
                 self.transform = .identity
             },
             completion: nil
         )
+  
+        UIView.animate(withDuration: 0.3) {
+            self.alpha = 1
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            maskBtn.alpha = 1
+        }
     }
     
     @objc public func dismiss() {
