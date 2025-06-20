@@ -112,6 +112,13 @@ public extension UIView {
                 return self.view.frame.size.height * UIScreen.main.scale
             }
         }
+        
+        
+        public func removeSubviews() {
+            for subview in self.view.subviews {
+                subview.removeFromSuperview()
+            }
+        }
     }
     
     // MARK: TWLUIViewClassExStruct
@@ -129,7 +136,8 @@ public extension UIView {
 
     var twl: TWLUIViewExStruct {
         get {
-            return TWLUIViewExStruct(self)
+            weak var weakSelf = self
+            return TWLUIViewExStruct(weakSelf!)
         }
         set {
             

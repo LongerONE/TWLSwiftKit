@@ -30,14 +30,14 @@ open class TWLTextView: UITextView {
             placeHolderLbl.font = placeHolderFont
         }
     }
-    public var placeHolderLeft: CGFloat? {
+    public var placeHolderLeft: CGFloat? = 4 {
         didSet {
             placeHolderLbl.isHidden = false
             guard let placeHolderLeft = placeHolderLeft else { return }
             placeHolderLbl.twl.x = placeHolderLeft
         }
     }
-    public var placeHolderTop: CGFloat? {
+    public var placeHolderTop: CGFloat? = 4 {
         didSet {
             placeHolderLbl.isHidden = false
             guard let placeHolderTop = placeHolderTop else { return }
@@ -71,6 +71,8 @@ open class TWLTextView: UITextView {
         placeHolderLbl = UILabel()
         placeHolderLbl.isHidden = true
         addSubview(placeHolderLbl)
+        placeHolderLbl.twl.y = placeHolderTop ?? 0
+        placeHolderLbl.twl.x = placeHolderLeft ?? 0
         
         
         NotificationCenter.default.addObserver(
