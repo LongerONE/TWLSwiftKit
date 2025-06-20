@@ -258,9 +258,9 @@ open class TWLAlertView: TWLView {
         else { return }
 
         let convertedFrame = self.convert(keyboardFrame, from: nil)
-        let keyboardHeight = max(self.bounds.maxY - convertedFrame.minY, 0)
+        let keyboardHeight = convertedFrame.size.height
         TWLDPrint("键盘高度：\(keyboardHeight)")
-        guard abs(keyboardHeight - lastKeyboardHeight) > 1 else { return }
+
         self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
     }
     
