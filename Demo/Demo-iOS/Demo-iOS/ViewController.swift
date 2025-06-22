@@ -8,10 +8,12 @@
 import UIKit
 import TWLSwiftKit
 
+
 class ViewController: UIViewController {
 
     var confs: [String: String] = [
         "AutoFlow": "AutoFlowController",
+        "Field": "FieldController",
         "String": "StringController",
         "TextView": "TextViewController"
     ]

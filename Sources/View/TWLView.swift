@@ -1,8 +1,5 @@
 //
 //  TWLView.swift
-//  Temby
-//
-//  Created by 唐万龙 on 2023/5/31.
 //
 
 import UIKit

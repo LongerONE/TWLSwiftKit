@@ -1,8 +1,5 @@
 //
 //  String+TWL.swift
-//  Temby
-//
-//  Created by 唐万龙 on 2023/6/1.
 //
 
 import Foundation

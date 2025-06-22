@@ -1,8 +1,5 @@
 //
 //  Array+Ex.swift
-//  Temby
-//
-//  Created by 唐万龙 on 2023/5/29.
 //
 
 import Foundation

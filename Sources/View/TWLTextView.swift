@@ -2,8 +2,6 @@
 //  TWLTextView.swift
 //  TWLSwiftKit
 //
-//  Created by 唐万龙 on 2025/6/17.
-//
 
 import UIKit
 

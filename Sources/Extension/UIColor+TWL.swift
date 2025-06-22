@@ -1,8 +1,5 @@
 //
 //  UIColor+TWL.swift
-//  Temby
-//
-//  Created by 唐万龙 on 2023/6/7.
 //
 
 import UIKit

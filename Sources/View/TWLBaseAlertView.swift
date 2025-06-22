@@ -1,8 +1,5 @@
 //
 //  TWLBaseAlertView.swift
-//  Temby
-//
-//  Created by 唐万龙 on 2023/8/1.
 //
 
 import UIKit
