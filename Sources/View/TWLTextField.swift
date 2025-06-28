@@ -12,7 +12,19 @@ open class TWLTextField: UITextField {
             maxLength = max(0, maxLength)
         }
     }
-
+    
+    open var placeholderFont: UIFont = UIFont.systemFont(ofSize: 15) {
+        didSet {
+            showPlaceholderInfo()
+        }
+    }
+    
+    open var placeholderColor: UIColor? = UIColor.black {
+        didSet {
+            showPlaceholderInfo()
+        }
+    }
+    
     var textDidChange: ((String) -> Void)?
 
     override init(frame: CGRect) {
@@ -41,5 +53,16 @@ open class TWLTextField: UITextField {
         textDidChange?(self.text ?? "")
     }
 
-    
+    private func showPlaceholderInfo() {
+        let color = placeholderColor ?? UIColor.black
+        let attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: color,
+            .font: placeholderFont
+        ]
+
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder ?? "",
+            attributes: attributes
+        )
+    }
 }

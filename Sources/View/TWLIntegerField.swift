@@ -5,7 +5,7 @@
 import UIKit
 
 open class TWLIntegerField: TWLTextField {
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initTextField()
@@ -22,24 +22,29 @@ open class TWLIntegerField: TWLTextField {
     }
     
     @objc private func handleTextChange() {
-            guard let text = self.text else { return }
-
-            let filteredText = text.filter { $0.isNumber }
-
-            guard !filteredText.isEmpty else {
-                self.text = ""
-                return
-            }
-            
-            var processedText = String(filteredText.drop { $0 == "0" })
-            if processedText.isEmpty {
-                processedText = "0"
-            }
-
+        guard let text = self.text else { return }
+        
+        let filteredText = text.filter { $0.isNumber }
+        
+        guard !filteredText.isEmpty else {
+            self.text = ""
+            return
+        }
+        
+        var processedText = String(filteredText.drop { $0 == "0" })
+        if processedText.isEmpty {
+            processedText = "0"
+        }
+        
+        if maxLength > 0 {
             let trimmedText = String(processedText.prefix(maxLength))
-
+            
             if trimmedText != self.text {
                 self.text = trimmedText
             }
+        } else {
+            self.text = processedText
         }
+        
+    }
 }

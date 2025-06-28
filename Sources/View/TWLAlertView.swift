@@ -101,7 +101,7 @@ open class TWLAlertView: TWLView {
         }
     }
     
-    public func showBottom(on: UIView? = nil) {
+    public func showBottom(on: UIView? = nil, animate: Bool = true) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .bottom
         animateType = .move
@@ -116,7 +116,12 @@ open class TWLAlertView: TWLView {
         self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
         self.twl.y = maskBtn.twl.height
         
-        UIView.animate(withDuration: 0.3) {
+        if animate {
+            UIView.animate(withDuration: 0.3) {
+                maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+                self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius
+            }
+        } else {
             maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
             self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius
         }
