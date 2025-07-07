@@ -6,6 +6,8 @@ import UIKit
 
 open class TWLIntegerField: TWLTextField {
     
+    open var inputUpdate: (_ text: String?) -> Void = {_ in}
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initTextField()
@@ -28,6 +30,7 @@ open class TWLIntegerField: TWLTextField {
         
         guard !filteredText.isEmpty else {
             self.text = ""
+            inputUpdate(self.text)
             return
         }
         
@@ -46,5 +49,6 @@ open class TWLIntegerField: TWLTextField {
             self.text = processedText
         }
         
+        inputUpdate(self.text)
     }
 }
