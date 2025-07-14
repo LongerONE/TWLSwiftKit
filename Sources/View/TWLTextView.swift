@@ -81,36 +81,29 @@ open class TWLTextView: UITextView {
         )
     }
     
+    
     @objc private func textViewContentsDidChange(_ notification: Notification) {
         guard let tv = notification.object as? UITextView else { return }
-        if maxLength > 0, tv.text.count > maxLength {
-            let endIndex = tv.text.index(tv.text.startIndex, offsetBy: maxLength)
-            tv.text = String(tv.text[..<endIndex])
+
+        if tv.markedTextRange == nil {
+            if maxLength > 0, tv.text.count > maxLength {
+                let endIndex = tv.text.index(tv.text.startIndex, offsetBy: maxLength)
+                tv.text = String(tv.text[..<endIndex])
+            }
+
+            if let lineSpace = lineSpace, let currentAttr = tv.attributedText {
+                let attributedText = NSMutableAttributedString(attributedString: currentAttr)
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = lineSpace
+                attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
+                tv.attributedText = attributedText
+            }
+
+            placeHolderLbl.isHidden = tv.text.count > 0
+            contentsUpdate(self)
+        } else {
+            placeHolderLbl.isHidden = tv.text.count > 0
         }
-        
-        if let lineSpace = lineSpace, var attributedText = self.attributedText?.mutableCopy() as? NSMutableAttributedString  {
-            
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = lineSpace
-            
-            attributedText.addAttribute(
-                .paragraphStyle,
-                value: paragraphStyle,
-                range: NSRange(location: 0, length: attributedText.length)
-            )
-            
-            self.attributedText = attributedText
-        }
-        
-        placeHolderLbl.isHidden = tv.text.count > 0
-        
-        weak var weakSelf = self
-        guard let outSelf = weakSelf else { return }
-        contentsUpdate(outSelf)
     }
-    
-    
-    
-    
     
 }
