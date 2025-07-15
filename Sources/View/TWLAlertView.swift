@@ -26,7 +26,8 @@ open class TWLAlertView: TWLView {
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
     public var adoptKeyboard = false
-    public var keybordTopSpace: CGFloat = 20.0
+    public var keyboardTopSpace: CGFloat = 20.0
+    public var bottomOffset: CGFloat = 0
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
@@ -119,11 +120,11 @@ open class TWLAlertView: TWLView {
         if animate {
             UIView.animate(withDuration: 0.3) {
                 maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-                self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius
+                self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
             }
         } else {
             maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-            self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius
+            self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
         }
     }
     
@@ -288,17 +289,17 @@ open class TWLAlertView: TWLView {
                     if self.position == .center {
                         self.center = self.superview!.center
                     } else {
-                        self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius
+                        self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
                     }
                 } else {
                     if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
                         let frameOfScreen = responder.convert(responder.bounds, to: window)
-                        if frameOfScreen.origin.y + frameOfScreen.size.height + self.keybordTopSpace > window.bounds.size.height - keyboardHeight {
-                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height  - self.keybordTopSpace)
+                        if frameOfScreen.origin.y + frameOfScreen.size.height + self.keyboardTopSpace > window.bounds.size.height - keyboardHeight {
+                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height  - self.keyboardTopSpace)
                             if self.position == .center {
                                 self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
                             } else {
-                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet
+                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet - self.bottomOffset
                             }
                         }
                     }
