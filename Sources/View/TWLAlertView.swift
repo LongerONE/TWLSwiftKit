@@ -47,15 +47,8 @@ open class TWLAlertView: TWLView {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(keyboardWillChange(_:)),
-            name: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textFieldDidBeginEditingNotification(_:)),
-            name: UITextField.textDidBeginEditingNotification,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
     }
@@ -230,30 +223,10 @@ open class TWLAlertView: TWLView {
             dismissClosure()
         }
     }
-    
-    @objc private func keyboardWillChange(_ notification: Notification) {
-        guard adoptKeyboard else { return }
-        
-        pendingKeyboardAdjustment?.cancel()
-        
-        let adjustmentTask = DispatchWorkItem { [weak self] in
-            self?.adjustLayoutWithKeyboard(notification)
-        }
 
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.1,
-            execute: adjustmentTask
-        )
-        pendingKeyboardAdjustment = adjustmentTask
-    }
-    
-    @objc private func textFieldDidBeginEditingNotification(_ note: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         guard adoptKeyboard else { return }
         
-        self.adjustScrollViewForKeyboard(duration: 0.3, curve: 3, keyboardHeight: lastKeyboardHeight)
-    }
-    
-    private func adjustLayoutWithKeyboard(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
               let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
@@ -278,29 +251,51 @@ open class TWLAlertView: TWLView {
     }
     
     func adjustScrollViewForKeyboard(duration: TimeInterval, curve: UInt, keyboardHeight: CGFloat) {
-        lastKeyboardHeight = keyboardHeight
-
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: UIView.AnimationOptions(rawValue: curve << 16),
             animations: {
+                // 获取主窗体和当前焦点控件
+                guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
                 if keyboardHeight == 0 {
+                    // 键盘收起，恢复到初始位置
                     if self.position == .center {
                         self.center = self.superview!.center
                     } else {
                         self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
                     }
                 } else {
-                    if let responder = self.findFirstResponder(in: self), let window = UIApplication.shared.twlKeyWindow {
+                    if let responder = self.findFirstResponder(in: self) {
                         let frameOfScreen = responder.convert(responder.bounds, to: window)
-                        if frameOfScreen.origin.y + frameOfScreen.size.height + self.keyboardTopSpace > window.bounds.size.height - keyboardHeight {
-                            let offSet = frameOfScreen.origin.y - (window.bounds.size.height - keyboardHeight - frameOfScreen.size.height  - self.keyboardTopSpace)
+                        // 提示：frameOfScreen.maxY = frameOfScreen.origin.y + frameOfScreen.size.height
+                        let overlap = frameOfScreen.maxY + self.keyboardTopSpace - (window.bounds.height - keyboardHeight)
+                        if overlap > 0 { // 被遮挡了，需要上移
+                            var newY: CGFloat
                             if self.position == .center {
-                                self.twl.y = (TWLScreenHeight - self.twl.height) * 0.5 - offSet
+                                // 计算上移后的位置，并防止越界到屏幕顶部
+                                newY = (TWLScreenHeight - self.twl.height) * 0.5 - overlap
+                                newY = max(0, newY)
+                                self.twl.y = newY
                             } else {
-                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - offSet - self.bottomOffset
+                                newY = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - overlap - self.bottomOffset
+                                // 也不要越界到屏幕顶部
+                                self.twl.y = max(0, newY)
                             }
+                        } else {
+                            // 没被遮挡，补充恢复（比如侧滑未遮挡时应恢复）
+                            if self.position == .center {
+                                self.center = self.superview!.center
+                            } else {
+                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
+                            }
+                        }
+                    } else {
+                        // 没有焦点控件，恢复
+                        if self.position == .center {
+                            self.center = self.superview!.center
+                        } else {
+                            self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
                         }
                     }
                 }
