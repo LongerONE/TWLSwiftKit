@@ -19,6 +19,13 @@ open class TWLTextField: UITextField {
         }
     }
     
+    open override var placeholder: String? {
+        didSet {
+            super.placeholder = placeholder
+            showPlaceholderInfo()
+        }
+    }
+    
     open var placeholderColor: UIColor? = UIColor.black {
         didSet {
             showPlaceholderInfo()
