@@ -10,6 +10,8 @@ open class TWLImageView: UIImageView {
     public var uuid: String?
     
     public var obj: Any?
+    
+    public var isSelected = false
 
     @IBInspectable var cornerRadius: Double {
          get {
