@@ -5,6 +5,10 @@
 import UIKit
 
 open class TWLTextField: UITextField {
+    
+    public var uuid: String?
+    
+    public var obj: Any?
  
     @IBInspectable
     open var maxLength: Int = 0 {

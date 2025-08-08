@@ -7,8 +7,8 @@ import UIKit
 
 open class TWLAutoFlowView: UIView {
 
-    open var useAutoLayout = false
-    open var useContentsHeight = false     // 由内容撑起高度
+    open var useAutoLayout = true
+    open var useContentsHeight = true     // 由内容撑起高度
     open var colCount = 0
     open var innerSpace: CGFloat = 0.0           // 元素间距
     open var lineSpace: CGFloat = 0.0            // 元素行距
@@ -159,17 +159,6 @@ open class TWLAutoFlowView: UIView {
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        useAutoLayout = true
-        useContentsHeight = true
-    }
-    
-    required public init?(coder: NSCoder) {
-        super.init(coder: coder)
-        useAutoLayout = true
-        useContentsHeight = true
-    }
 }
 
 

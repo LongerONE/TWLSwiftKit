@@ -6,6 +6,10 @@ import UIKit
 
 @IBDesignable
 open class TWLView: UIView {
+    
+    public var uuid: String?
+    
+    public var obj: Any?
 
     @IBInspectable public var cornerRadius: Double {
          get {
