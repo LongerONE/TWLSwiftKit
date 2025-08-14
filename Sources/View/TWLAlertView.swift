@@ -278,7 +278,7 @@ open class TWLAlertView: TWLView {
                                 newY = max(0, newY)
                                 self.twl.y = newY
                             } else {
-                                newY = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - overlap - self.bottomOffset
+                                newY = self.twl.y - overlap
                                 // 也不要越界到屏幕顶部
                                 self.twl.y = max(0, newY)
                             }
