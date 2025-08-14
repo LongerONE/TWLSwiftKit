@@ -31,7 +31,7 @@ open class TWLAlertView: TWLView {
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
-    private var dismissing = false
+    public var dismissing = false
     
     public var dismissClosure: () -> Void = {}
     
