@@ -15,7 +15,8 @@ class ViewController: UIViewController {
         "AutoFlow": "AutoFlowController",
         "Field": "FieldController",
         "String": "StringController",
-        "TextView": "TextViewController"
+        "TextView": "TextViewController",
+        "Buttons": "ButtonsController"
     ]
     
     @IBOutlet weak var tableView: UITableView!
