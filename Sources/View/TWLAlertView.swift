@@ -194,6 +194,7 @@ open class TWLAlertView: TWLView {
                     self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
                 },
                 completion: { _ in
+                    self.dismissClosure()
                     self.superview?.removeFromSuperview()
                 }
             )
@@ -212,6 +213,7 @@ open class TWLAlertView: TWLView {
                 self.twl.y = -self.twl.height
             }
         } completion: { _ in
+            self.dismissClosure()
             self.superview?.removeFromSuperview()
         }
     }
@@ -220,7 +222,6 @@ open class TWLAlertView: TWLView {
     @objc open func maskTapAction() {
         if canTapMaskDismss {
             dismiss()
-            dismissClosure()
         }
     }
 
