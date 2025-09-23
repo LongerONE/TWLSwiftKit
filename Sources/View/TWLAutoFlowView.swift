@@ -14,7 +14,9 @@ open class TWLAutoFlowView: UIView {
     open var lineSpace: CGFloat = 0.0            // 元素行距
     open var contentInset: UIEdgeInsets = .zero  // 内容边距
     open var showHeight: CGFloat = 0.0
-
+    
+    var oldFrame: CGRect = .zero
+    
     private var allConstraints: [NSLayoutConstraint] = []
     
     open func removeSubviews() {
@@ -25,6 +27,7 @@ open class TWLAutoFlowView: UIView {
 
     open func addArrangedSubview(_ currentView: UIView) {
         addSubview(currentView)
+        oldFrame = .zero
     }
     
     
@@ -159,6 +162,15 @@ open class TWLAutoFlowView: UIView {
         }
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if frame != oldFrame {
+            oldFrame = frame
+            updateSubviewsLayout()
+        } else {
+            TWLDPrint("TWLAutoFlowView 不用更新布局")
+        }
+    }
 }
 
 
