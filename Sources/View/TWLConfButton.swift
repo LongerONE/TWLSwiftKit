@@ -239,20 +239,50 @@ open class TWLConfButton: UIButton {
             alpha = disabledAlpha
             if let disabledTitle = disabledTitle {
                 configuration?.title = disabledTitle
-            } else if let normalTitle = normalTitle {
-                configuration?.title = normalTitle
+            } else {
+                if isChecked {
+                    if let checkedTitle = checkedTitle {
+                        configuration?.title = checkedTitle
+                    } else if let normalTitle = normalTitle {
+                        configuration?.title = normalTitle
+                    }
+                } else {
+                    if let normalTitle = normalTitle {
+                        configuration?.title = normalTitle
+                    }
+                }
             }
             
             if let disabledTitleColor = disabledTitleColor {
                 configuration?.baseForegroundColor = disabledTitleColor
-            } else if let normalTitleColor = normalTitleColor {
-                configuration?.baseForegroundColor = normalTitleColor
+            } else {
+                if isChecked {
+                    if let checkedTitleColor = checkedTitleColor {
+                        configuration?.baseForegroundColor = checkedTitleColor
+                    } else if let normalTitleColor = normalTitleColor {
+                        configuration?.baseForegroundColor = normalTitleColor
+                    }
+                } else {
+                    if let normalTitleColor = normalTitleColor {
+                        configuration?.baseForegroundColor = normalTitleColor
+                    }
+                }
             }
             
             if let disabledBgColor = disabledBgColor {
                 configuration?.background.backgroundColor = disabledBgColor
-            } else if let normalBgColor = normalBgColor {
-                configuration?.background.backgroundColor = normalBgColor
+            } else {
+                if isChecked {
+                    if let checkedBgColor = checkedBgColor {
+                        configuration?.background.backgroundColor = checkedBgColor
+                    } else if let normalBgColor = normalBgColor {
+                        configuration?.background.backgroundColor = normalBgColor
+                    }
+                } else {
+                    if let normalBgColor = normalBgColor {
+                        configuration?.background.backgroundColor = normalBgColor
+                    }
+                }
             }
             
             
@@ -262,76 +292,120 @@ open class TWLConfButton: UIButton {
                     outgoing.font = disabledTitleFont
                     return outgoing
                 })
-            } else if let normalTitleFont = normalTitleFont {
-                configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({incoming in
-                    var outgoing = incoming
-                    outgoing.font = normalTitleFont
-                    return outgoing
-                })
+            } else {
+                if isChecked {
+                    if let checkedTitleFont = checkedTitleFont {
+                        configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
+                            var outgoing = incoming
+                            outgoing.font = checkedTitleFont
+                            return outgoing
+                        })
+                    } else if let normalTitleFont = normalTitleFont {
+                        configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({incoming in
+                            var outgoing = incoming
+                            outgoing.font = normalTitleFont
+                            return outgoing
+                        })
+                    }
+                } else {
+                    if let normalTitleFont = normalTitleFont {
+                        configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({incoming in
+                            var outgoing = incoming
+                            outgoing.font = normalTitleFont
+                            return outgoing
+                        })
+                    }
+                }
             }
             
             if let disabledImage = disabledImage {
                 configuration?.image = disabledImage
-            } else if let normalImage = normalImage {
-                configuration?.image = normalImage
+            } else {
+                if isChecked {
+                    if let checkedImage = checkedImage {
+                        configuration?.image = checkedImage
+                    } else if let normalImage = normalImage {
+                        configuration?.image = normalImage
+                    }
+                } else {
+                    if let normalImage = normalImage {
+                       configuration?.image = normalImage
+                   }
+                }
             }
             
             if let disabledBgImage = disabledBgImage {
                 configuration?.background.image = disabledBgImage
-            } else if let normalBgImage = normalBgImage {
-                configuration?.background.image = normalBgImage
+            } else {
+                if isChecked {
+                    if let checkedBgImage = checkedBgImage {
+                        configuration?.background.image = checkedBgImage
+                    } else if let normalBgImage = normalBgImage {
+                        configuration?.background.image = normalBgImage
+                    }
+                } else {
+                    if let normalBgImage = normalBgImage {
+                        configuration?.background.image = normalBgImage
+                    }
+                }
             }
         } else {
             isUserInteractionEnabled = true
             alpha = 1.0
             
             if isChecked {
-                if let checkedTitle = checkedTitle {
-                    configuration?.title = checkedTitle
-                } else if let normalTitle = normalTitle {
-                    configuration?.title = normalTitle
-                }
-                
-                if let checkedTitleColor = checkedTitleColor {
-                    configuration?.baseForegroundColor = checkedTitleColor
-                } else if let normalTitleColor = normalTitleColor {
-                    configuration?.baseForegroundColor = normalTitleColor
-                }
-                
-                if let checkedBgColor = checkedBgColor {
-                    configuration?.background.backgroundColor = checkedBgColor
-                } else if let normalBgColor = normalBgColor {
-                    configuration?.background.backgroundColor = normalBgColor
-                }
-                
-                if let checkedTitleFont = checkedTitleFont {
-                    configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
-                        var outgoing = incoming
-                        outgoing.font = checkedTitleFont
-                        return outgoing
-                    })
-                } else if let normalTitleFont = normalTitleFont {
-                    configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({incoming in
-                        var outgoing = incoming
-                        outgoing.font = normalTitleFont
-                        return outgoing
-                    })
-                }
-                
-                if let checkedImage = checkedImage {
-                    configuration?.image = checkedImage
-                } else if let normalImage = normalImage {
-                    configuration?.image = normalImage
-                }
-                
-                if let checkedBgImage = checkedBgImage {
-                    configuration?.background.image = checkedBgImage
-                } else if let normalBgImage = normalBgImage {
-                    configuration?.background.image = normalBgImage
-                }
+                showCheckedView()
             } else {
                 showNormalView()
             }
+        }
+    }
+    
+    func showCheckedView() {
+        guard #available(iOS 15.0, *) else { return }
+        
+        if let checkedTitle = checkedTitle {
+            configuration?.title = checkedTitle
+        } else if let normalTitle = normalTitle {
+            configuration?.title = normalTitle
+        }
+        
+        if let checkedTitleColor = checkedTitleColor {
+            configuration?.baseForegroundColor = checkedTitleColor
+        } else if let normalTitleColor = normalTitleColor {
+            configuration?.baseForegroundColor = normalTitleColor
+        }
+        
+        if let checkedBgColor = checkedBgColor {
+            configuration?.background.backgroundColor = checkedBgColor
+        } else if let normalBgColor = normalBgColor {
+            configuration?.background.backgroundColor = normalBgColor
+        }
+        
+        if let checkedTitleFont = checkedTitleFont {
+            configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
+                var outgoing = incoming
+                outgoing.font = checkedTitleFont
+                return outgoing
+            })
+        } else if let normalTitleFont = normalTitleFont {
+            configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({incoming in
+                var outgoing = incoming
+                outgoing.font = normalTitleFont
+                return outgoing
+            })
+        }
+        
+        if let checkedImage = checkedImage {
+            configuration?.image = checkedImage
+        } else if let normalImage = normalImage {
+            configuration?.image = normalImage
+        }
+        
+        if let checkedBgImage = checkedBgImage {
+            configuration?.background.image = checkedBgImage
+        } else if let normalBgImage = normalBgImage {
+            configuration?.background.image = normalBgImage
         }
     }
     
