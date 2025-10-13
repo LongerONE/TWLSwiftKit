@@ -46,7 +46,6 @@ open class TWLAutoFlowView: UIView {
             
             if useAutoLayout {
                 currentView.translatesAutoresizingMaskIntoConstraints = false
-                currentView.layoutIfNeeded()
             } else {
                 currentView.translatesAutoresizingMaskIntoConstraints = true
             }

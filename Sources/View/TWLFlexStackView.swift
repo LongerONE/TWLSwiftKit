@@ -15,6 +15,7 @@ open class TWLFlexStackView: UIScrollView {
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         contentInsetAdjustmentBehavior = .never
+        delaysContentTouches = false
 
         stackView = UIStackView()
         stackView.axis = axis
