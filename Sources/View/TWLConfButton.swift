@@ -100,11 +100,11 @@ open class TWLConfButton: UIButton {
             
             conf.contentInsets = insets
             
-            self.init(configuration: conf)
-               
             if let cornerRadius = cornerRadius {
-                self.layer.cornerRadius = cornerRadius
+                conf.background.cornerRadius = cornerRadius
             }
+            
+            self.init(configuration: conf)
             
             if let borderColor = borderColor {
                 self.layer.borderColor = borderColor.cgColor
@@ -130,9 +130,6 @@ open class TWLConfButton: UIButton {
             } else {
                 self.init(type: .system)
             }
-            
-            
-            
         }
     }
     
