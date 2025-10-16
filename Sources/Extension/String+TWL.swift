@@ -77,6 +77,23 @@ public extension String {
                 return UIColor.twl.from(hex: self.string)
             }
         }
+        
+        /// 返回指定字符串中所有目标子字符串的 Range
+        /// - Parameters:
+        ///   - searchString: 搜索字符串
+        /// - Returns: Range数组
+        public func ranges(of searchString: String) -> [Range<String.Index>] {
+            var ranges: [Range<String.Index>] = []
+            var searchRange: Range<String.Index>?
+            
+            while let foundRange = self.string.range(of: searchString, options: [], range: searchRange) {
+                ranges.append(foundRange)
+                // 更新搜索范围，避免重复找到相同的字符串
+                searchRange = Range(uncheckedBounds: (foundRange.upperBound, self.string.endIndex))
+            }
+            
+            return ranges
+        }
     }
     
 
