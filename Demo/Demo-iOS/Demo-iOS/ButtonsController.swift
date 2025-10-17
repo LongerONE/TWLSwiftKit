@@ -19,6 +19,16 @@ class ButtonsController: UIViewController {
 
         let btn = TWLButton()
         
+        let confBtn = TWLConfButton()
+        if #available(iOS 15.0, *) {
+            confBtn.configurationUpdateHandler = { btn in
+                
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        view.addSubview(confBtn)
+        
     }
     
     

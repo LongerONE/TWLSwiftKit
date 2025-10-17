@@ -148,6 +148,10 @@ open class TWLConfButton: UIButton {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
+        if #available(iOS 15.0, *) {
+            self.configuration = UIButton.Configuration.plain()
+        }
+
         self.addTarget(self, action: #selector(touchUpInSideAction), for: .touchUpInside)
     }
     
