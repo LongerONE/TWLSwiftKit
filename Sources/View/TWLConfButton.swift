@@ -53,6 +53,15 @@ open class TWLConfButton: UIButton {
     public var disabledTitleColor: UIColor?
     public var disabledTitleFont: UIFont?
     
+    public class func `default`() -> TWLConfButton {
+        if #available(iOS 15.0, *) {
+            let conf = UIButton.Configuration.plain()
+            return TWLConfButton(configuration: conf)
+        } else {
+            return TWLConfButton()
+        }
+    }
+    
     public convenience init(title: String? = nil,
                 color: UIColor? = nil,
                 font: UIFont? = nil,

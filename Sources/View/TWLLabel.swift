@@ -19,7 +19,7 @@ open class TWLLabel: UILabel {
     ///   - color: 颜色
     ///   - font: 字体
     ///   - underline: 是否加下划线
-    func setAttributedText(_ targetStrings: [String], colors: [UIColor], fonts: [UIFont], underline: Bool = false) {
+    public func setAttributedText(_ targetStrings: [String], colors: [UIColor], fonts: [UIFont], underline: Bool = false) {
         guard let fullText = self.text else { return }
         
         let attributedString = NSMutableAttributedString(string: fullText)
@@ -49,7 +49,7 @@ open class TWLLabel: UILabel {
     ///   - color: 颜色
     ///   - font: 字体
     ///   - underline: 是否加下划线
-    func setLineSpace(_ space: CGFloat) {
+    public func setLineSpace(_ space: CGFloat) {
         guard let labelText = self.text else { return }
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = space
