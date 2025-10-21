@@ -115,6 +115,10 @@ open class TWLConfButton: UIButton {
             
             self.init(configuration: conf)
             
+            if let cornerRadius = cornerRadius {
+                self.layer.cornerRadius = cornerRadius
+            }
+            
             if let borderColor = borderColor {
                 self.layer.borderColor = borderColor.cgColor
                 self.layer.borderWidth = 1
