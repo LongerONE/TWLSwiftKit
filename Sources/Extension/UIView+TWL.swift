@@ -41,6 +41,18 @@ public extension UIView {
             }
         }
         
+        public var bottom: CGFloat {
+            get {
+                return self.y + self.height
+            }
+                        
+            set {
+                var frame = self.view.frame
+                frame.origin.y = newValue - self.height
+                self.view.frame = frame
+            }
+        }
+        
         
         public var width: CGFloat {
             get {
