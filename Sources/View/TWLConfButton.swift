@@ -16,42 +16,30 @@ open class TWLConfButton: UIButton {
     
     public var touchUpInSideClosure:((_ btn: TWLConfButton) -> Void)?
     
-    public var isChecked: Bool = false {
-        didSet {
-            updateView()
-        }
-    }
+    public var isChecked: Bool = false { didSet { updateView() }}
+    public var isDisabled: Bool = false { didSet { updateView() }}
     
+    public var normalImage: UIImage? { didSet { updateView() }}
+    public var normalBgImage: UIImage? { didSet { updateView() }}
+    public var normalBgColor: UIColor? { didSet { updateView() }}
+    public var normalTitle: String? { didSet { updateView() }}
+    public var normalTitleColor: UIColor? { didSet { updateView() }}
+    public var normalTitleFont: UIFont? { didSet { updateView() }}
     
-    public var isDisabled: Bool = false {
-        didSet {
-            updateView()
-        }
-    }
+    public var checkedImage: UIImage? { didSet { updateView() }}
+    public var checkedBgImage: UIImage? { didSet { updateView() }}
+    public var checkedBgColor: UIColor? { didSet { updateView() }}
+    public var checkedTitle: String? { didSet { updateView() }}
+    public var checkedTitleColor: UIColor? { didSet { updateView() }}
+    public var checkedTitleFont: UIFont? { didSet { updateView() }}
     
-    
-    
-    public var normalImage: UIImage?
-    public var normalBgImage: UIImage?
-    public var normalBgColor: UIColor?
-    public var normalTitle: String?
-    public var normalTitleColor: UIColor?
-    public var normalTitleFont: UIFont?
-    
-    public var checkedImage: UIImage?
-    public var checkedBgImage: UIImage?
-    public var checkedBgColor: UIColor?
-    public var checkedTitle: String?
-    public var checkedTitleColor: UIColor?
-    public var checkedTitleFont: UIFont?
-    
-    public var disabledAlpha = 0.5
-    public var disabledImage: UIImage?
-    public var disabledBgColor: UIColor?
-    public var disabledBgImage: UIImage?
-    public var disabledTitle: String?
-    public var disabledTitleColor: UIColor?
-    public var disabledTitleFont: UIFont?
+    public var disabledAlpha = 0.5 { didSet { updateView() }}
+    public var disabledImage: UIImage? { didSet { updateView() }}
+    public var disabledBgColor: UIColor? { didSet { updateView() }}
+    public var disabledBgImage: UIImage? { didSet { updateView() }}
+    public var disabledTitle: String? { didSet { updateView() }}
+    public var disabledTitleColor: UIColor? { didSet { updateView() }}
+    public var disabledTitleFont: UIFont? { didSet { updateView() }}
     
     public class func `default`() -> TWLConfButton {
         if #available(iOS 15.0, *) {
