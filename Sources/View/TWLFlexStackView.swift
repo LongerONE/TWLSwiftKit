@@ -58,8 +58,8 @@ open class TWLFlexStackView: UIScrollView {
     
     
     open override func touchesShouldCancel(in view: UIView) -> Bool {
-        if view is UITextField {
-            return true // 允许在 TextField 上滑动时 ScrollView 继续滚动
+        if view is UITextField || view is UIButton {
+            return true // 允许在 TextField, UIButton 上滑动时 ScrollView 继续滚动
         }
         return super.touchesShouldCancel(in: view)
     }

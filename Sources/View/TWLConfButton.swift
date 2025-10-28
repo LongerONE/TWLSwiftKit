@@ -25,6 +25,7 @@ open class TWLConfButton: UIButton {
     public var normalTitle: String? { didSet { updateView() }}
     public var normalTitleColor: UIColor? { didSet { updateView() }}
     public var normalTitleFont: UIFont? { didSet { updateView() }}
+    public var normalInsets: NSDirectionalEdgeInsets? { didSet { updateView() }}
     
     public var checkedImage: UIImage? { didSet { updateView() }}
     public var checkedBgImage: UIImage? { didSet { updateView() }}
@@ -40,6 +41,8 @@ open class TWLConfButton: UIButton {
     public var disabledTitle: String? { didSet { updateView() }}
     public var disabledTitleColor: UIColor? { didSet { updateView() }}
     public var disabledTitleFont: UIFont? { didSet { updateView() }}
+    
+    
     
     public class func `default`() -> TWLConfButton {
         if #available(iOS 15.0, *) {
@@ -435,6 +438,10 @@ open class TWLConfButton: UIButton {
         }
         if let normalBgImage = normalBgImage {
             configuration?.background.image = normalBgImage
+        }
+        
+        if let normalInsets = normalInsets {
+            configuration?.contentInsets = normalInsets
         }
     }
 
