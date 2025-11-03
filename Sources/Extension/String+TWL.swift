@@ -34,7 +34,6 @@ public extension String {
             return self.string.addingPercentEncoding(withAllowedCharacters: .letters) ?? self.string
         }
         
-        
         public var array: Array<Any>? {
             if let jsonData = self.string.data(using: .utf8) {
                 do {
@@ -62,7 +61,6 @@ public extension String {
                 return nil
             }
         }
-        
         
         public func addQuery(key:String, value: String) -> String {
             if self.string.contains("?") {
@@ -94,6 +92,37 @@ public extension String {
             
             return ranges
         }
+        
+        
+        public func substring(at location: Int, length: Int) -> String? {
+            if location > self.string.count || (location+length > self.string.count) {
+                return nil
+            }
+            var subStr: String = ""
+            for idx in location..<(location+length) {
+                subStr += self.string[self.string.index(self.string.startIndex, offsetBy: idx)].description
+            }
+            return subStr
+        }
+        
+        /// 从开头到指定位置（不含该位置）的子串
+        public func substring(to location: Int) -> String? {
+            guard location >= 0, location <= self.string.count else {
+                return nil
+            }
+            let endIndex = self.string.index(self.string.startIndex, offsetBy: location)
+            return String(self.string[self.string.startIndex..<endIndex])
+        }
+
+        /// 从指定位置到结尾的子串
+        public func substring(from location: Int) -> String? {
+            guard location >= 0, location <= self.string.count else {
+                return nil
+            }
+            let startIndex = self.string.index(self.string.startIndex, offsetBy: location)
+            return String(self.string[startIndex..<self.string.endIndex])
+        }
+        
     }
     
 
