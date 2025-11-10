@@ -145,6 +145,9 @@ open class TWLConfButton: UIButton {
         
         if #available(iOS 15.0, *) {
             self.configuration = UIButton.Configuration.plain()
+            self.configurationUpdateHandler = { btn in
+                btn.alpha = btn.isHighlighted ? 0.4 : 1.0
+            }
         }
 
         self.addTarget(self, action: #selector(touchUpInSideAction), for: .touchUpInside)
