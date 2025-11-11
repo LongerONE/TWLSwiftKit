@@ -31,6 +31,8 @@ open class TWLAlertView: TWLView {
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
+    private var lastKeyboardShowTime: TimeInterval = 0.0
+    
     public var dismissing = false
     
     public var dismissClosure: () -> Void = {}
@@ -233,11 +235,15 @@ open class TWLAlertView: TWLView {
               let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
               let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
         else { return }
-
+        
         let convertedFrame = self.convert(keyboardFrame, from: nil)
         let keyboardHeight = convertedFrame.size.height
         TWLDPrint("键盘高度：\(keyboardHeight)")
-
+        
+        let now = Date().timeIntervalSince1970 * 1000
+        guard now - lastKeyboardShowTime > 200 else { return }
+        lastKeyboardShowTime = now
+        
         self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
     }
     
