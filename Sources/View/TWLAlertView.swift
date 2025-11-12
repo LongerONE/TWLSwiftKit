@@ -31,7 +31,6 @@ open class TWLAlertView: TWLView {
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
-    private var lastKeyboardShowTime: TimeInterval = 0.0
     
     public var dismissing = false
     
@@ -240,10 +239,6 @@ open class TWLAlertView: TWLView {
         let keyboardHeight = convertedFrame.size.height
         TWLDPrint("键盘高度：\(keyboardHeight)")
         
-        let now = Date().timeIntervalSince1970 * 1000
-        guard now - lastKeyboardShowTime > 200 else { return }
-        lastKeyboardShowTime = now
-        
         self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
     }
     
@@ -275,27 +270,17 @@ open class TWLAlertView: TWLView {
                 } else {
                     if let responder = self.findFirstResponder(in: self) {
                         let frameOfScreen = responder.convert(responder.bounds, to: window)
-                        // 提示：frameOfScreen.maxY = frameOfScreen.origin.y + frameOfScreen.size.height
                         let overlap = frameOfScreen.maxY + self.keyboardTopSpace - (window.bounds.height - keyboardHeight)
-                        if overlap > 0 { // 被遮挡了，需要上移
-                            var newY: CGFloat
-                            if self.position == .center {
-                                // 计算上移后的位置，并防止越界到屏幕顶部
-                                newY = (TWLScreenHeight - self.twl.height) * 0.5 - overlap
-                                newY = max(0, newY)
-                                self.twl.y = newY
-                            } else {
-                                newY = self.twl.y - overlap
-                                // 也不要越界到屏幕顶部
-                                self.twl.y = max(0, newY)
-                            }
+                        var newY: CGFloat
+                        if self.position == .center {
+                            // 计算上移后的位置，并防止越界到屏幕顶部
+                            newY = (TWLScreenHeight - self.twl.height) * 0.5 - overlap
+                            newY = max(0, newY)
+                            self.twl.y = newY
                         } else {
-                            // 没被遮挡，补充恢复（比如侧滑未遮挡时应恢复）
-                            if self.position == .center {
-                                self.center = self.superview!.center
-                            } else {
-                                self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
-                            }
+                            newY = self.twl.y - overlap
+                            // 也不要越界到屏幕顶部
+                            self.twl.y = max(0, newY)
                         }
                     } else {
                         // 没有焦点控件，恢复
