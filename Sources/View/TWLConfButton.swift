@@ -166,7 +166,7 @@ open class TWLConfButton: UIButton {
     }
 
     
-    @IBInspectable public var onePixelBorder: Bool {
+    @IBInspectable open var onePixelBorder: Bool {
         get {
             return self.layer.borderWidth == 1.0 / UIScreen.main.scale
         } set {
@@ -178,7 +178,7 @@ open class TWLConfButton: UIButton {
         }
     }
     
-    @IBInspectable public var cornerRadius: Double {
+    @IBInspectable open var cornerRadius: Double {
          get {
            return Double(self.layer.cornerRadius)
          }set {
@@ -186,7 +186,7 @@ open class TWLConfButton: UIButton {
          }
     }
 
-    @IBInspectable public var borderWidth: Double {
+    @IBInspectable open var borderWidth: Double {
           get {
             return Double(self.layer.borderWidth)
           }
@@ -194,7 +194,7 @@ open class TWLConfButton: UIButton {
            self.layer.borderWidth = CGFloat(newValue)
           }
     }
-    @IBInspectable public var borderColor: UIColor? {
+    @IBInspectable open var borderColor: UIColor? {
          get {
             return UIColor(cgColor: self.layer.borderColor!)
          }
@@ -202,7 +202,7 @@ open class TWLConfButton: UIButton {
             self.layer.borderColor = newValue?.cgColor
          }
     }
-    @IBInspectable public var shadowColor: UIColor? {
+    @IBInspectable open var shadowColor: UIColor? {
         get {
            return UIColor(cgColor: self.layer.shadowColor!)
         }
@@ -210,7 +210,7 @@ open class TWLConfButton: UIButton {
            self.layer.shadowColor = newValue?.cgColor
         }
     }
-    @IBInspectable public var shadowOpacity: Float {
+    @IBInspectable open var shadowOpacity: Float {
         get {
            return self.layer.shadowOpacity
         }
@@ -220,7 +220,7 @@ open class TWLConfButton: UIButton {
     }
     
     
-    @IBInspectable public var shadowRadius: CGFloat {
+    @IBInspectable open var shadowRadius: CGFloat {
         get {
             return self.layer.shadowRadius
         }
@@ -229,7 +229,7 @@ open class TWLConfButton: UIButton {
        }
     }
     
-    @IBInspectable public var shadowOffsetHeight: CGFloat {
+    @IBInspectable open var shadowOffsetHeight: CGFloat {
         get {
             return self.layer.shadowOffset.height
         }
