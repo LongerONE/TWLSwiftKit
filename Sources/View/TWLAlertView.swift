@@ -89,7 +89,7 @@ open class TWLAlertView: TWLView {
         maskBtn.frame = showView.bounds
         
         maskBtn.addSubview(self)
-        self.center = maskBtn.center
+        self.updateFrame()
         
         UIView.animate(withDuration: 0.3) {
             maskBtn.alpha = 1.0
@@ -108,18 +108,7 @@ open class TWLAlertView: TWLView {
         maskBtn.frame = showView.bounds
         
         maskBtn.addSubview(self)
-        self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
-        self.twl.y = maskBtn.twl.height
-        
-        if animate {
-            UIView.animate(withDuration: 0.3) {
-                maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-                self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
-            }
-        } else {
-            maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-            self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
-        }
+        self.updateFrame(animate: animate)
     }
     
     public func showTop(on: UIView? = nil) {
@@ -134,13 +123,7 @@ open class TWLAlertView: TWLView {
         maskBtn.frame = showView.bounds
         
         maskBtn.addSubview(self)
-        self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
-        self.twl.y = -self.twl.height
-        
-        UIView.animate(withDuration: 0.3) {
-            maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
-            self.twl.y = 0
-        }
+        self.updateFrame()
     }
     
     public func showCenterZoom(on: UIView? = nil) {
@@ -177,6 +160,35 @@ open class TWLAlertView: TWLView {
         
         UIView.animate(withDuration: 0.3) {
             maskBtn.alpha = 1
+        }
+    }
+    
+    public func updateFrame(animate: Bool = true) {
+        guard let maskBtn = self.superview else { return }
+        switch position {
+        case .center:
+            self.center = maskBtn.center
+        case .bottom:
+            self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
+            self.twl.y = maskBtn.twl.height
+            
+            if animate {
+                UIView.animate(withDuration: 0.3) {
+                    maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+                    self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
+                }
+            } else {
+                maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+                self.twl.y = maskBtn.twl.height - self.twl.height + self.layer.cornerRadius - self.bottomOffset
+            }
+        case .top:
+            self.twl.x = (maskBtn.twl.width - self.twl.width) * 0.5
+            self.twl.y = -self.twl.height
+            
+            UIView.animate(withDuration: 0.3) {
+                maskBtn.backgroundColor = UIColor.black.withAlphaComponent(self.maskAlpha)
+                self.twl.y = 0
+            }
         }
     }
     
@@ -218,7 +230,6 @@ open class TWLAlertView: TWLView {
             self.superview?.removeFromSuperview()
         }
     }
-    
     
     @objc open func maskTapAction() {
         if canTapMaskDismss {

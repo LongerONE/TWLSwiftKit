@@ -19,6 +19,7 @@ open class TWLConfButton: UIButton {
     public var isChecked: Bool = false { didSet { updateView() }}
     public var isDisabled: Bool = false { didSet { updateView() }}
     
+    public var normalAlpha = 1.0 { didSet { updateView() }}
     public var normalImage: UIImage? { didSet { updateView() }}
     public var normalBgImage: UIImage? { didSet { updateView() }}
     public var normalBgColor: UIColor? { didSet { updateView() }}
@@ -119,8 +120,9 @@ open class TWLConfButton: UIButton {
                 self.layer.borderWidth = borderWidth
             }
             
-            self.configurationUpdateHandler = { btn in
-                btn.alpha = btn.isHighlighted ? 0.4 : 1.0
+            self.configurationUpdateHandler = {[weak self] btn in
+                guard let self = self else { return }
+                btn.alpha = btn.isHighlighted ? self.normalAlpha * 0.5 : self.normalAlpha
             }
             
             self.normalTitle = title
@@ -359,7 +361,7 @@ open class TWLConfButton: UIButton {
             }
         } else {
             isUserInteractionEnabled = true
-            alpha = 1.0
+            alpha = normalAlpha
             
             if isChecked {
                 showCheckedView()
