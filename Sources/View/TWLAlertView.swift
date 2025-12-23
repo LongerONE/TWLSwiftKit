@@ -76,6 +76,19 @@ open class TWLAlertView: TWLView {
         return false
     }
     
+    public class func showingAlertView(on: UIView? = nil) -> Self? {
+        guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return nil }
+        for subview in showView.subviews {
+            if subview.isKind(of: TWLMaskBtn.self), let alertView = subview.subviews.first as? Self {
+                if alertView is Self {
+                    return alertView
+                }
+            }
+        }
+        return nil
+    }
+    
+    
     public func showCenterFade(on: UIView? = nil) {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return }
         position = .center
