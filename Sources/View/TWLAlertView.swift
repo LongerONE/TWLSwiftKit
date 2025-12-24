@@ -22,6 +22,7 @@ open class TWLAlertView: TWLView {
     
     private var position: TWLAlertPositionType = .center
     private var animateType: TWLAlertAnimateType = .fade
+    private var adoptKeyboardTask: Task<Void, Never>?
     
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
@@ -35,6 +36,9 @@ open class TWLAlertView: TWLView {
     public var dismissing = false
     
     public var dismissClosure: () -> Void = {}
+    
+    
+    
     
     
     public override init(frame: CGRect) {
@@ -263,7 +267,16 @@ open class TWLAlertView: TWLView {
         let keyboardHeight = convertedFrame.size.height
         TWLDPrint("键盘高度：\(keyboardHeight)")
         
-        self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
+        adoptKeyboardTask?.cancel()
+        adoptKeyboardTask = Task {
+            let nanoSeconds: UInt64 = UInt64(0.3 * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: nanoSeconds)
+            
+            guard !Task.isCancelled else { return }
+            
+            self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
+        }
+        
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
