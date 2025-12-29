@@ -103,3 +103,9 @@ public var twlStatusBarHeight: CGFloat {
         return UIApplication.shared.statusBarFrame.height
     }
 }
+
+
+public func twlTaskSleep(seconds: Float) async {
+    let nanoSeconds: UInt64 = UInt64(seconds * 1_000_000_000)
+    try? await Task.sleep(nanoseconds: nanoSeconds)
+}

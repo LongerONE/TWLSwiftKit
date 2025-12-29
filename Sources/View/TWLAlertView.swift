@@ -22,7 +22,6 @@ open class TWLAlertView: TWLView {
     
     private var position: TWLAlertPositionType = .center
     private var animateType: TWLAlertAnimateType = .fade
-    private var adoptKeyboardTask: Task<Void, Never>?
     
     public var maskAlpha = 0.72
     public var canTapMaskDismss = false
@@ -32,6 +31,8 @@ open class TWLAlertView: TWLView {
     
     private var pendingKeyboardAdjustment: DispatchWorkItem?
     private var lastKeyboardHeight: CGFloat = 0
+    private var originalY: CGFloat?
+    private var originalCenter: CGPoint?
     
     public var dismissing = false
     
@@ -267,16 +268,7 @@ open class TWLAlertView: TWLView {
         let keyboardHeight = convertedFrame.size.height
         TWLDPrint("键盘高度：\(keyboardHeight)")
         
-        adoptKeyboardTask?.cancel()
-        adoptKeyboardTask = Task {
-            let nanoSeconds: UInt64 = UInt64(0.3 * 1_000_000_000)
-            try? await Task.sleep(nanoseconds: nanoSeconds)
-            
-            guard !Task.isCancelled else { return }
-            
-            self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: keyboardHeight)
-        }
-        
+        self.adjustPositionForKeyboard(keyboardHeight: keyboardHeight, duration: duration, curve: curve)
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
@@ -286,50 +278,76 @@ open class TWLAlertView: TWLView {
               let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
               let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
         else { return }
-        self.adjustScrollViewForKeyboard(duration: duration, curve: curve, keyboardHeight: 0)
+        self.adjustPositionForKeyboard(keyboardHeight: 0, duration: duration, curve: curve)
     }
     
-    func adjustScrollViewForKeyboard(duration: TimeInterval, curve: UInt, keyboardHeight: CGFloat) {
-        UIView.animate(
-            withDuration: duration,
-            delay: 0,
-            options: UIView.AnimationOptions(rawValue: curve << 16),
-            animations: {
-                // 获取主窗体和当前焦点控件
-                guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
-                if keyboardHeight == 0 {
-                    // 键盘收起，恢复到初始位置
+    func adjustPositionForKeyboard(keyboardHeight: CGFloat, duration: TimeInterval, curve: UInt) {
+        // 获取主窗体
+        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+        
+        if keyboardHeight > 0 {
+            if self.position == .center {
+                if originalCenter == nil { originalCenter = self.center }
+            } else {
+                if originalY == nil { originalY = self.twl.y }
+            }
+        }
+
+        // 设置动画选项，增加 .beginFromCurrentState 以平滑衔接多次触发
+        let animOptions = UIView.AnimationOptions(rawValue: (curve << 16) | UIView.AnimationOptions.beginFromCurrentState.rawValue)
+
+        UIView.animate(withDuration: duration, delay: 0, options: animOptions, animations: {
+            if keyboardHeight <= 0 {
+                // --- 步骤 B: 恢复逻辑 ---
+                if let orgCenter = self.originalCenter, self.position == .center {
+                    self.center = orgCenter
+                } else if let orgY = self.originalY {
+                    self.twl.y = orgY
+                }
+                // 清减备份，以便下次弹出时重新计算（适配屏幕旋转等）
+                self.originalCenter = nil
+                self.originalY = nil
+                
+            } else {
+                // --- 步骤 C: 计算位移 ---
+                guard let responder = self.findFirstResponder(in: self) else { return }
+                
+                // 获取输入框在窗口中的当前位置
+                let frameInWindow = responder.convert(responder.bounds, to: window)
+                
+                // 计算键盘顶部的 Y 坐标
+                let keyboardTopY = window.bounds.height - keyboardHeight
+                
+                // 计算当前输入框底部距离键盘顶部的距离（加上间距）
+                // 注意：这里需要考虑视图可能已经为了避让键盘移动了一部分
+                let currentBottom = frameInWindow.maxY + self.keyboardTopSpace
+                let overlap = currentBottom - keyboardTopY
+                
+                // 只有当遮挡了，或者已经处于偏移状态时才调整
+                if overlap > 0 || self.isAlreadyOffset() {
+                    var targetY: CGFloat
+                    
                     if self.position == .center {
-                        self.center = self.superview!.center
+                        // 基于当前位置继续上移
+                        targetY = self.twl.y - overlap
                     } else {
-                        self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
+                        targetY = self.twl.y - overlap
                     }
-                } else {
-                    if let responder = self.findFirstResponder(in: self) {
-                        let frameOfScreen = responder.convert(responder.bounds, to: window)
-                        let overlap = frameOfScreen.maxY + self.keyboardTopSpace - (window.bounds.height - keyboardHeight)
-                        var newY: CGFloat
-                        if self.position == .center {
-                            // 计算上移后的位置，并防止越界到屏幕顶部
-                            newY = (TWLScreenHeight - self.twl.height) * 0.5 - overlap
-                            newY = max(0, newY)
-                            self.twl.y = newY
-                        } else {
-                            newY = self.twl.y - overlap
-                            // 也不要越界到屏幕顶部
-                            self.twl.y = max(0, newY)
-                        }
-                    } else {
-                        // 没有焦点控件，恢复
-                        if self.position == .center {
-                            self.center = self.superview!.center
-                        } else {
-                            self.twl.y = TWLScreenHeight - self.twl.height + self.layer.cornerRadius - self.bottomOffset
-                        }
-                    }
+                    
+                    // 边界保护：不能超出屏幕顶部
+                    self.twl.y = max(0, targetY)
                 }
             }
-        )
+        }, completion: nil)
+    }
+
+    // 辅助方法：判断当前是否已经发生了偏移
+    private func isAlreadyOffset() -> Bool {
+        if self.position == .center {
+            return originalCenter != nil && self.center != originalCenter
+        } else {
+            return originalY != nil && self.twl.y != originalY
+        }
     }
     
     private func findFirstResponder(in view: UIView) -> UIView? {
