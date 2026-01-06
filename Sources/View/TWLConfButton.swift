@@ -119,12 +119,7 @@ open class TWLConfButton: UIButton {
             if let borderWidth = borderWidth {
                 self.layer.borderWidth = borderWidth
             }
-            
-            self.configurationUpdateHandler = {[weak self] btn in
-                guard let self = self else { return }
-                btn.alpha = btn.isHighlighted ? self.normalAlpha * 0.5 : self.normalAlpha
-            }
-            
+                        
             self.normalTitle = title
             self.normalTitleFont = font
             self.normalTitleColor = color
@@ -367,6 +362,15 @@ open class TWLConfButton: UIButton {
                 showCheckedView()
             } else {
                 showNormalView()
+            }
+        }
+        
+        self.configurationUpdateHandler = {[weak self] btn in
+            guard let self = self else { return }
+            if self.isDisabled {
+                btn.alpha = disabledAlpha
+            } else {
+                btn.alpha = btn.isHighlighted ? self.normalAlpha * 0.5 : self.normalAlpha
             }
         }
     }
