@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import Combine
 
 open class TWLTextView: UITextView {
     
@@ -48,6 +49,7 @@ open class TWLTextView: UITextView {
     public var contentsUpdate: (_ twlTextView: TWLTextView) -> Void = {_ in}
 
     private var placeHolderLbl: UILabel!
+    private var cancellables = Set<AnyCancellable>()
     
     public init() {
         super.init(frame: .zero, textContainer: nil)
@@ -72,18 +74,24 @@ open class TWLTextView: UITextView {
         placeHolderLbl.twl.y = placeHolderTop ?? 0
         placeHolderLbl.twl.x = placeHolderLeft ?? 0
         
+        self.publisher(for: \.text)
+            .sink {[weak self] text in
+                guard let self = self else { return }
+                self.textViewContentsDidChange()
+            }.store(in: &cancellables)
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textViewContentsDidChange(_:)),
-            name: UITextView.textDidChangeNotification,
-            object: self
-        )
+        NotificationCenter.default.publisher(for: UITextView.textDidChangeNotification, object: self)
+            .compactMap { ($0.object as? UITextView)?.text }
+            .sink {[weak self] text in
+                guard let self = self else { return }
+                self.textViewContentsDidChange()
+            }
+            .store(in: &cancellables)
     }
     
     
-    @objc private func textViewContentsDidChange(_ notification: Notification) {
-        guard let tv = notification.object as? UITextView else { return }
+    @objc private func textViewContentsDidChange() {
+        let tv = self
 
         if tv.markedTextRange == nil {
             if maxLength > 0, tv.text.count > maxLength {
