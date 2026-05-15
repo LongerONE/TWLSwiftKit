@@ -16,8 +16,8 @@ open class TWLConfButton: UIButton {
     
     public var touchUpInSideClosure:((_ btn: TWLConfButton) -> Void)?
     
-    public var isChecked: Bool = false { didSet { updateView() }}
-    public var isDisabled: Bool = false { didSet { updateView() }}
+    open var isChecked: Bool = false { didSet { updateView() }}
+    open var isDisabled: Bool = false { didSet { updateView() }}
     
     public var normalAlpha = 1.0 { didSet { updateView() }}
     public var normalImage: UIImage? { didSet { updateView() }}
