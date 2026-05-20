@@ -23,6 +23,17 @@ public extension Array  {
             }
         }
         
+        
+        public var prettyJSONString: String? {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: self.arrry, options: [.prettyPrinted])
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                return jsonString
+            } catch {
+                TWLDPrint("❌ 数组转 JSON String 失败: \(error.localizedDescription)")
+                return nil
+            }
+        }
     }
     
     

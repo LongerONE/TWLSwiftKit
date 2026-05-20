@@ -123,6 +123,21 @@ public extension String {
             return String(self.string[startIndex..<self.string.endIndex])
         }
         
+        
+        public var prettyJSONString: String? {
+            guard let data = self.string.data(using: .utf8) else {
+                return nil
+            }
+            
+            do {
+                let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                let prettyData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
+                return String(data: prettyData, encoding: .utf8)
+            } catch {
+                TWLDPrint("JSON 解析或格式化失败: \(error.localizedDescription)")
+                return nil
+            }
+        }
     }
     
 
