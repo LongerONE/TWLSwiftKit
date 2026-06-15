@@ -30,15 +30,15 @@ public extension UIApplication {
     var twlKeyWindow: UIWindow? {
         get {
             if #available(iOS 13.0, *) {
-                let scenes = connectedScenes
-                if scenes.count > 0 {
-                    return scenes.compactMap { $0 as? UIWindowScene }
-                        .first?.windows
-                        .filter { $0.isKeyWindow }
-                        .first
-                } else {
-                    return self.keyWindow
+                let windowScenes = connectedScenes.compactMap { $0 as? UIWindowScene }
+                let foregroundScenes = windowScenes.filter {
+                    $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive
                 }
+                return foregroundScenes.lazy.compactMap {
+                    $0.windows.first(where: \.isKeyWindow)
+                }.first ?? windowScenes.lazy.compactMap {
+                    $0.windows.first(where: \.isKeyWindow)
+                }.first ?? self.keyWindow
             } else {
                 return self.keyWindow
             }
@@ -106,6 +106,7 @@ public var twlStatusBarHeight: CGFloat {
 
 
 public func twlTaskSleep(seconds: Float) async {
+    guard seconds.isFinite, seconds > 0 else { return }
     let nanoSeconds: UInt64 = UInt64(seconds * 1_000_000_000)
     try? await Task.sleep(nanoseconds: nanoSeconds)
 }

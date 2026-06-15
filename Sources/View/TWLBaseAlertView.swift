@@ -13,8 +13,8 @@ open class TWLBaseAlertView: TWLView {
     public func show(from: UIView?, on: UIView? = nil) {
         let maskBtn = TWLButton(type: .custom)
         let window = on != nil ? on : UIApplication.shared.twlKeyWindow
-        if on != nil {
-            window?.transform = on!.transform
+        if let on {
+            window?.transform = on.transform
         }
         window?.addSubview(maskBtn)
         maskBtn.alpha = 0.0
@@ -27,8 +27,8 @@ open class TWLBaseAlertView: TWLView {
             }
         }
         
-        if from != nil {
-            let postion = maskBtn.convert(from!.frame, from: from!.superview)
+        if let from {
+            let postion = maskBtn.convert(from.frame, from: from.superview)
             
             self.twl.x = postion.origin.x + postion.size.width * 0.5 - self.twl.width * 0.5
             

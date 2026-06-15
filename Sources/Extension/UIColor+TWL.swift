@@ -24,10 +24,17 @@ public extension UIColor {
             guard length == 6 || length == 8 else {
                 return nil
             }
+
+            let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEFabcdef")
+            guard hexSanitized.unicodeScalars.allSatisfy(hexCharacters.contains) else {
+                return nil
+            }
             
             var rgb: UInt64 = 0
-            
-            Scanner(string: hexSanitized).scanHexInt64(&rgb)
+            let scanner = Scanner(string: hexSanitized)
+            guard scanner.scanHexInt64(&rgb), scanner.isAtEnd else {
+                return nil
+            }
             
             let red, green, blue, a: CGFloat
             if length == 6 {
@@ -84,11 +91,8 @@ public extension UIColor {
     
     var twl: TWLUIColorClassExStruct {
         get {
-            weak var weakSelf = self
-            return TWLUIColorClassExStruct(weakSelf!)
+            TWLUIColorClassExStruct(self)
         }
-        set {
-            
-        }
+        set {}
     }
 }

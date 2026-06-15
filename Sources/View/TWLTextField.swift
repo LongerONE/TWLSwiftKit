@@ -54,6 +54,11 @@ open class TWLTextField: UITextField {
 
 
     @objc private func editingChanged() {
+        guard markedTextRange == nil else {
+            textDidChange?(self.text ?? "")
+            return
+        }
+
         guard maxLength > 0, let text = self.text, text.count > maxLength else {
             textDidChange?(self.text ?? "")
             return

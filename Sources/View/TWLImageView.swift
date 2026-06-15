@@ -13,7 +13,7 @@ open class TWLImageView: UIImageView {
     
     public var isSelected = false
 
-    @IBInspectable var cornerRadius: Double {
+    @IBInspectable public var cornerRadius: Double {
          get {
            return Double(self.layer.cornerRadius)
          }set {
@@ -21,7 +21,7 @@ open class TWLImageView: UIImageView {
          }
     }
 
-    @IBInspectable var borderWidth: Double {
+    @IBInspectable public var borderWidth: Double {
           get {
             return Double(self.layer.borderWidth)
           }
@@ -29,23 +29,23 @@ open class TWLImageView: UIImageView {
            self.layer.borderWidth = CGFloat(newValue)
           }
     }
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable public var borderColor: UIColor? {
          get {
-            return UIColor(cgColor: self.layer.borderColor!)
+            return self.layer.borderColor.map(UIColor.init(cgColor:))
          }
          set {
             self.layer.borderColor = newValue?.cgColor
          }
     }
-    @IBInspectable var shadowColor: UIColor? {
+    @IBInspectable public var shadowColor: UIColor? {
         get {
-           return UIColor(cgColor: self.layer.shadowColor!)
+           return self.layer.shadowColor.map(UIColor.init(cgColor:))
         }
         set {
            self.layer.shadowColor = newValue?.cgColor
         }
     }
-    @IBInspectable var shadowOpacity: Float {
+    @IBInspectable public var shadowOpacity: Float {
         get {
            return self.layer.shadowOpacity
         }
@@ -54,7 +54,7 @@ open class TWLImageView: UIImageView {
        }
     }
     
-    @IBInspectable var shadowRadius: CGFloat {
+    @IBInspectable public var shadowRadius: CGFloat {
         get {
             return self.layer.shadowRadius
         }
@@ -63,7 +63,7 @@ open class TWLImageView: UIImageView {
        }
     }
     
-    @IBInspectable var shadowOffsetHeight: CGFloat {
+    @IBInspectable public var shadowOffsetHeight: CGFloat {
         get {
             return self.layer.shadowOffset.height
         }

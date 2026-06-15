@@ -38,23 +38,29 @@ open class TWLAutoFlowView: UIView {
             subview.removeFromSuperview()
         }
         arrangedSubviews = []
-        layoutSubviews()
+        oldFrame = .zero
+        setNeedsLayout()
     }
     
     
     open func updateSubviewsLayout() {
         TWLDPrint("[TWLAutoFlowView]开始自动处理布局...")
         
-        var count: Int = arrangedSubviews.count
+        let count = arrangedSubviews.count
         var top: CGFloat = contentInset.top
         var left: CGFloat = contentInset.left
         var preView: UIView?
         
-        for constranit in allConstraints {
-            constranit.isActive = false
-            removeConstraint(constranit)
-        }
+        NSLayoutConstraint.deactivate(allConstraints)
         allConstraints = []
+
+        guard count > 0 else {
+            showHeight = 0
+            if useContentsHeight && !useAutoLayout {
+                twl.height = 0
+            }
+            return
+        }
         
         for (index, currentView) in arrangedSubviews.enumerated() {
             guard currentView.superview != nil else { continue }
@@ -165,9 +171,10 @@ open class TWLAutoFlowView: UIView {
                 }
             }
             
-            NSLayoutConstraint.activate(allConstraints)
             preView = currentView
         }
+
+        NSLayoutConstraint.activate(allConstraints)
     }
     
     open override func layoutSubviews() {
@@ -180,5 +187,4 @@ open class TWLAutoFlowView: UIView {
         }
     }
 }
-
 

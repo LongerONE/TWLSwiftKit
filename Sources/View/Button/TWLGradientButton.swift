@@ -4,10 +4,10 @@ import UIKit
 
 /// 四个独立圆角半径配置
 public struct TWLCornerRadii: Equatable {
-    var topLeft:     CGFloat
-    var topRight:    CGFloat
-    var bottomLeft:  CGFloat
-    var bottomRight: CGFloat
+    public var topLeft:     CGFloat
+    public var topRight:    CGFloat
+    public var bottomLeft:  CGFloat
+    public var bottomRight: CGFloat
 
     // MARK: Init
 
@@ -32,7 +32,7 @@ public struct TWLCornerRadii: Equatable {
 
     // MARK: Presets
 
-    @MainActor static let zero = TWLCornerRadii(all: 0)
+    @MainActor public static let zero = TWLCornerRadii(all: 0)
 }
 
 // MARK: - CornerRadii + Path
@@ -43,10 +43,10 @@ extension TWLCornerRadii {
     /// 每个圆角值会被自动限制在 min(width, height) / 2 以内，避免变形
     func path(in rect: CGRect) -> UIBezierPath {
         let maxR = min(rect.width, rect.height) / 2
-        let tl = min(topLeft,     maxR)
-        let tr = min(topRight,    maxR)
-        let bl = min(bottomLeft,  maxR)
-        let br = min(bottomRight, maxR)
+        let tl = max(0, min(topLeft,     maxR))
+        let tr = max(0, min(topRight,    maxR))
+        let bl = max(0, min(bottomLeft,  maxR))
+        let br = max(0, min(bottomRight, maxR))
 
         let path = UIBezierPath()
         let minX = rect.minX, minY = rect.minY
@@ -109,13 +109,13 @@ extension TWLCornerRadii {
 /// 渐变色配置
 public struct TWLGradientConfig {
     /// 渐变颜色数组（至少两个）
-    var colors:     [UIColor]
+    public var colors:     [UIColor]
     /// 渐变起点，默认从左向右
-    var startPoint: CGPoint
+    public var startPoint: CGPoint
     /// 渐变终点
-    var endPoint:   CGPoint
+    public var endPoint:   CGPoint
     /// 各颜色在渐变轴上的位置，nil 则均匀分布
-    var locations:  [NSNumber]?
+    public var locations:  [NSNumber]?
 
     public init(
         colors:     [UIColor],
@@ -202,7 +202,7 @@ open class TWLGradientButton: TWLConfButton {
     }
 
     /// 分别设置四个圆角，不传的角保持为 0（覆盖旧值）
-    func setCornerRadius(
+    open func setCornerRadius(
         topLeft:     CGFloat = 0,
         topRight:    CGFloat = 0,
         bottomLeft:  CGFloat = 0,
@@ -328,7 +328,7 @@ open class TWLGradientButton: TWLConfButton {
 
 // MARK: - GradientButton Factory
 
-extension TWLGradientButton {
+public extension TWLGradientButton {
 
     /// 快捷工厂方法
     /// - Parameters:

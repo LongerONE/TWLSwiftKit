@@ -5,8 +5,12 @@ open class TWLCurrencyField: TWLTextField {
     
     open var textDidChanged:(_ textField: TWLCurrencyField) -> Void = {_ in}
      
-    open var maxIntegerLength = 0
-    open var maxDecimalLength = 2
+    open var maxIntegerLength = 0 {
+        didSet { maxIntegerLength = max(0, maxIntegerLength) }
+    }
+    open var maxDecimalLength = 2 {
+        didSet { maxDecimalLength = max(0, maxDecimalLength) }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -44,16 +48,15 @@ open class TWLCurrencyField: TWLTextField {
         let filtered = input.filter { $0.isNumber || $0 == "." }
         
         // 步骤2：拆分整数和小数部分
-        let components = filtered.components(separatedBy: ".")
-        
-        // 处理多个小数点的情况
-        guard components.count <= 2 else {
-            return String(filtered.dropLast())
-        }
+        let decimalPoint = filtered.firstIndex(of: ".")
+        let integerInput = decimalPoint.map { String(filtered[..<$0]) } ?? filtered
+        let decimalInput = decimalPoint.map {
+            String(filtered[filtered.index(after: $0)...].filter(\.isNumber))
+        } ?? ""
         
         // 步骤3：处理各部分内容
-        let integerPart = processIntegerPart(components.first ?? "")
-        let decimalPart = processDecimalPart(components.count > 1 ? components[1] : "")
+        let integerPart = processIntegerPart(integerInput)
+        let decimalPart = processDecimalPart(decimalInput)
         
         // 特殊处理单独的小数点
         if filtered == "." {
@@ -63,7 +66,7 @@ open class TWLCurrencyField: TWLTextField {
         // 步骤4：组合最终结果
         return combineResults(integer: integerPart,
                               decimal: decimalPart,
-                              hasDecimalPoint: components.count == 2)
+                              hasDecimalPoint: decimalPoint != nil)
     }
 
     private func processIntegerPart(_ part: String) -> String {

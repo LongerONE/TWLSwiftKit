@@ -26,9 +26,7 @@ open class TWLButton: UIButton {
     }
     
     @objc func touchUpInSideAction() {
-        if (self.touchUpInSideClosure != nil) {
-            self.touchUpInSideClosure!(self)
-        }
+        self.touchUpInSideClosure?(self)
     }
 
     
@@ -62,7 +60,7 @@ open class TWLButton: UIButton {
     }
     @IBInspectable public var borderColor: UIColor? {
          get {
-            return UIColor(cgColor: self.layer.borderColor!)
+            return self.layer.borderColor.map(UIColor.init(cgColor:))
          }
          set {
             self.layer.borderColor = newValue?.cgColor
@@ -70,7 +68,7 @@ open class TWLButton: UIButton {
     }
     @IBInspectable public var shadowColor: UIColor? {
         get {
-           return UIColor(cgColor: self.layer.shadowColor!)
+           return self.layer.shadowColor.map(UIColor.init(cgColor:))
         }
         set {
            self.layer.shadowColor = newValue?.cgColor

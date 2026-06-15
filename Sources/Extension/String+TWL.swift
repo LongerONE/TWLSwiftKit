@@ -81,13 +81,19 @@ public extension String {
         ///   - searchString: 搜索字符串
         /// - Returns: Range数组
         public func ranges(of searchString: String) -> [Range<String.Index>] {
+            guard !searchString.isEmpty else { return [] }
+
             var ranges: [Range<String.Index>] = []
-            var searchRange: Range<String.Index>?
+            var searchStart = self.string.startIndex
             
-            while let foundRange = self.string.range(of: searchString, options: [], range: searchRange) {
+            while searchStart < self.string.endIndex,
+                  let foundRange = self.string.range(
+                    of: searchString,
+                    options: [],
+                    range: searchStart..<self.string.endIndex
+                  ) {
                 ranges.append(foundRange)
-                // 更新搜索范围，避免重复找到相同的字符串
-                searchRange = Range(uncheckedBounds: (foundRange.upperBound, self.string.endIndex))
+                searchStart = foundRange.upperBound
             }
             
             return ranges
@@ -95,14 +101,12 @@ public extension String {
         
         
         public func substring(at location: Int, length: Int) -> String? {
-            if location > self.string.count || (location+length > self.string.count) {
-                return nil
-            }
-            var subStr: String = ""
-            for idx in location..<(location+length) {
-                subStr += self.string[self.string.index(self.string.startIndex, offsetBy: idx)].description
-            }
-            return subStr
+            guard location >= 0, length >= 0, location <= self.string.count,
+                  length <= self.string.count - location else { return nil }
+
+            let startIndex = self.string.index(self.string.startIndex, offsetBy: location)
+            let endIndex = self.string.index(startIndex, offsetBy: length)
+            return String(self.string[startIndex..<endIndex])
         }
         
         /// 从开头到指定位置（不含该位置）的子串

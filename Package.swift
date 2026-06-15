@@ -22,6 +22,10 @@ let package = Package(
             resources: [
                 .copy("Assets/PrivacyInfo.xcprivacy")
             ]
+        ),
+        .testTarget(
+            name: "TWLSwiftKitTests",
+            dependencies: ["TWLSwiftKit"]
         )
     ]
 )

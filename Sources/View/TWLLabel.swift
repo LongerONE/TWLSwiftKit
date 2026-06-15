@@ -29,10 +29,12 @@ open class TWLLabel: UILabel {
             
             for range in ranges {
                 let nsRange = NSRange(range, in: fullText)
-                // 设置颜色
-                attributedString.addAttribute(.foregroundColor, value: colors.count == 1 ? colors.first! : colors[index], range: nsRange)
-                // 设置字体
-                attributedString.addAttribute(.font, value: fonts.count == 1 ? fonts.first! : fonts[index], range: nsRange)
+                if let color = colors.count == 1 ? colors.first : colors[twl: index] {
+                    attributedString.addAttribute(.foregroundColor, value: color, range: nsRange)
+                }
+                if let font = fonts.count == 1 ? fonts.first : fonts[twl: index] {
+                    attributedString.addAttribute(.font, value: font, range: nsRange)
+                }
                 // 设置下划线
                 if underline {
                     attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: nsRange)

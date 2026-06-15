@@ -34,10 +34,10 @@ open class TWLFlowView: UIView {
             subView.removeFromSuperview()
         }
         
-        if dataSource != nil {
-            count = dataSource!.numberOfViews(flowView: self)
+        if let dataSource {
+            count = max(0, dataSource.numberOfViews(flowView: self))
         } else {
-            count = numberClosure()
+            count = max(0, numberClosure())
         }
         
         if count == 0 {
@@ -51,9 +51,9 @@ open class TWLFlowView: UIView {
         
         var preView: UIView?
         for index in 0..<count {
-            var currentView: UIView!
-            if dataSource != nil {
-                currentView = dataSource!.viewForIndex(flowView: self, index: index)
+            let currentView: UIView
+            if let dataSource {
+                currentView = dataSource.viewForIndex(flowView: self, index: index)
             } else {
                 currentView = viewClosure(index)
             }
@@ -62,7 +62,7 @@ open class TWLFlowView: UIView {
                 currentView.setNeedsLayout()
                 currentView.layoutIfNeeded()
                 currentView.translatesAutoresizingMaskIntoConstraints = false
-                self.layoutSubviews()
+                setNeedsLayout()
             }
             
  
@@ -115,10 +115,13 @@ open class TWLFlowView: UIView {
                     let width = (twl.width - CGFloat(colCount - 1) * innerSpace - contentInset.left - contentInset.right) / CGFloat(colCount)
                     currentView.twl.width = width
                     currentView.twl.x = CGFloat(index % colCount) * (width + innerSpace) + contentInset.left
-                    currentView.twl.y = floor(CGFloat(index) / CGFloat(colCount)) * (currentView.twl.height + lineSpace)
+                    currentView.twl.y = floor(CGFloat(index) / CGFloat(colCount)) * (currentView.twl.height + lineSpace) + contentInset.top
                     
-                    if useContentsHeight {
-                        twl.height = currentView.twl.y + currentView.twl.height + contentInset.bottom
+                    if index == count - 1 {
+                        showHeight = currentView.twl.y + currentView.twl.height + contentInset.bottom
+                        if useContentsHeight {
+                            twl.height = showHeight
+                        }
                     }
                 }
             } else {
@@ -193,5 +196,4 @@ open class TWLFlowView: UIView {
     
     
 }
-
 

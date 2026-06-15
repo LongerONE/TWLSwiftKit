@@ -29,7 +29,7 @@ open class TWLView: UIView {
     }
     @IBInspectable public var borderColor: UIColor? {
          get {
-            return UIColor(cgColor: self.layer.borderColor!)
+            return self.layer.borderColor.map(UIColor.init(cgColor:))
          }
          set {
             self.layer.borderColor = newValue?.cgColor
@@ -37,7 +37,7 @@ open class TWLView: UIView {
     }
     @IBInspectable public var shadowColor: UIColor? {
         get {
-           return UIColor(cgColor: self.layer.shadowColor!)
+           return self.layer.shadowColor.map(UIColor.init(cgColor:))
         }
         set {
            self.layer.shadowColor = newValue?.cgColor

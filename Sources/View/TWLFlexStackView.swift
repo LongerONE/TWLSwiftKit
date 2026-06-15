@@ -10,7 +10,15 @@ open class TWLFlexStackView: UIScrollView {
 
     public init(axis: NSLayoutConstraint.Axis) {
         super.init(frame: .zero)
+        commonInit(axis: axis)
+    }
 
+    required public init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit(axis: .vertical)
+    }
+
+    private func commonInit(axis: NSLayoutConstraint.Axis) {
         bounces = false
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
@@ -22,10 +30,6 @@ open class TWLFlexStackView: UIScrollView {
         addSubview(stackView)
         
         setupConstraints(axis: axis)
-    }
-
-    required public init?(coder: NSCoder) {
-        super.init(coder: coder)
     }
 
     private func setupConstraints(axis: NSLayoutConstraint.Axis) {

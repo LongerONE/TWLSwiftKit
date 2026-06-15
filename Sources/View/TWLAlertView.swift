@@ -44,7 +44,16 @@ open class TWLAlertView: TWLView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        commonInit()
+    }
+
+    @MainActor
+    required public init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+
+    private func commonInit() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -57,12 +66,6 @@ open class TWLAlertView: TWLView {
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
-    }
-    
-    @MainActor
-    required public init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
     }
     
     public class func showing(on: UIView? = nil) -> Bool {
@@ -283,7 +286,7 @@ open class TWLAlertView: TWLView {
     
     func adjustPositionForKeyboard(keyboardHeight: CGFloat, duration: TimeInterval, curve: UInt) {
         // 获取主窗体
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+        guard let window = self.window ?? superview?.window ?? UIApplication.shared.twlKeyWindow else { return }
         
         if keyboardHeight > 0 {
             if self.position == .center {

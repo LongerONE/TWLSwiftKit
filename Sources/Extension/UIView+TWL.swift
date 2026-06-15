@@ -171,12 +171,9 @@ public extension UIView {
 
     var twl: TWLUIViewExStruct {
         get {
-            weak var weakSelf = self
-            return TWLUIViewExStruct(weakSelf!)
+            TWLUIViewExStruct(self)
         }
-        set {
-            
-        }
+        set {}
     }
     
 }

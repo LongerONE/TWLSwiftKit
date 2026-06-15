@@ -131,6 +131,34 @@ open class TWLConfButton: UIButton {
             } else {
                 self.init(type: .system)
             }
+
+            setTitle(title, for: .normal)
+            setTitleColor(color, for: .normal)
+            titleLabel?.font = font
+            backgroundColor = bgColor
+            setImage(image, for: .normal)
+            contentEdgeInsets = UIEdgeInsets(
+                top: insets.top,
+                left: insets.leading,
+                bottom: insets.bottom,
+                right: insets.trailing
+            )
+            if let cornerRadius {
+                layer.cornerRadius = cornerRadius
+            }
+            if let borderColor {
+                layer.borderColor = borderColor.cgColor
+                layer.borderWidth = 1
+            }
+            if let borderWidth {
+                layer.borderWidth = borderWidth
+            }
+
+            normalTitle = title
+            normalTitleFont = font
+            normalTitleColor = color
+            normalImage = image
+            normalBgColor = bgColor
         }
     }
     
@@ -157,9 +185,7 @@ open class TWLConfButton: UIButton {
     }
     
     @objc func touchUpInSideAction() {
-        if (self.touchUpInSideClosure != nil) {
-            self.touchUpInSideClosure!(self)
-        }
+        self.touchUpInSideClosure?(self)
     }
 
     
@@ -193,7 +219,7 @@ open class TWLConfButton: UIButton {
     }
     @IBInspectable open var borderColor: UIColor? {
          get {
-            return UIColor(cgColor: self.layer.borderColor!)
+            return self.layer.borderColor.map(UIColor.init(cgColor:))
          }
          set {
             self.layer.borderColor = newValue?.cgColor
@@ -201,7 +227,7 @@ open class TWLConfButton: UIButton {
     }
     @IBInspectable open var shadowColor: UIColor? {
         get {
-           return UIColor(cgColor: self.layer.shadowColor!)
+           return self.layer.shadowColor.map(UIColor.init(cgColor:))
         }
         set {
            self.layer.shadowColor = newValue?.cgColor
@@ -237,7 +263,10 @@ open class TWLConfButton: UIButton {
 
     
     public func updateView() {
-        guard #available(iOS 15.0, *) else { return }
+        guard #available(iOS 15.0, *) else {
+            updateLegacyView()
+            return
+        }
 
         if isDisabled {
             isUserInteractionEnabled = false
@@ -373,6 +402,35 @@ open class TWLConfButton: UIButton {
                 btn.alpha = btn.isHighlighted ? self.normalAlpha * 0.5 : self.normalAlpha
             }
         }
+    }
+
+    private func updateLegacyView() {
+        isUserInteractionEnabled = !isDisabled
+        alpha = isDisabled ? disabledAlpha : normalAlpha
+
+        let title = isDisabled
+            ? (disabledTitle ?? (isChecked ? checkedTitle : nil) ?? normalTitle)
+            : ((isChecked ? checkedTitle : nil) ?? normalTitle)
+        let titleColor = isDisabled
+            ? (disabledTitleColor ?? (isChecked ? checkedTitleColor : nil) ?? normalTitleColor)
+            : ((isChecked ? checkedTitleColor : nil) ?? normalTitleColor)
+        let image = isDisabled
+            ? (disabledImage ?? (isChecked ? checkedImage : nil) ?? normalImage)
+            : ((isChecked ? checkedImage : nil) ?? normalImage)
+        let backgroundImage = isDisabled
+            ? (disabledBgImage ?? (isChecked ? checkedBgImage : nil) ?? normalBgImage)
+            : ((isChecked ? checkedBgImage : nil) ?? normalBgImage)
+
+        setTitle(title, for: .normal)
+        setTitleColor(titleColor, for: .normal)
+        setImage(image, for: .normal)
+        setBackgroundImage(backgroundImage, for: .normal)
+        backgroundColor = isDisabled
+            ? (disabledBgColor ?? (isChecked ? checkedBgColor : nil) ?? normalBgColor)
+            : ((isChecked ? checkedBgColor : nil) ?? normalBgColor)
+        titleLabel?.font = isDisabled
+            ? (disabledTitleFont ?? (isChecked ? checkedTitleFont : nil) ?? normalTitleFont)
+            : ((isChecked ? checkedTitleFont : nil) ?? normalTitleFont)
     }
     
     func showCheckedView() {
