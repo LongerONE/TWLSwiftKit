@@ -4,7 +4,7 @@
 
 import UIKit
 
-
+@MainActor
 public extension UIView {
     
     // MARK: TWLUIViewExStruct
@@ -137,16 +137,16 @@ public extension UIView {
             path.move(to: CGPoint(x: bounds.minX + topLeft, y: bounds.minY))
             path.addLine(to: CGPoint(x: bounds.maxX - topRight, y: bounds.minY))
             path.addArc(withCenter: CGPoint(x: bounds.maxX - topRight, y: bounds.minY + topRight), radius: topRight,
-                        startAngle: CGFloat(3 * Double.pi / 2), endAngle: 0, clockwise: true)
+                        startAngle: 3 * CGFloat.pi / 2, endAngle: 0, clockwise: true)
             path.addLine(to: CGPoint(x: bounds.maxX, y: bounds.maxY - bottomRight))
             path.addArc(withCenter: CGPoint(x: bounds.maxX - bottomRight, y: bounds.maxY - bottomRight), radius: bottomRight,
-                        startAngle: 0, endAngle: CGFloat(Double.pi / 2), clockwise: true)
+                        startAngle: 0, endAngle: CGFloat.pi / 2, clockwise: true)
             path.addLine(to: CGPoint(x: bounds.minX + bottomLeft, y: bounds.maxY))
             path.addArc(withCenter: CGPoint(x: bounds.minX + bottomLeft, y: bounds.maxY - bottomLeft), radius: bottomLeft,
-                        startAngle: CGFloat(Double.pi / 2), endAngle: CGFloat(Double.pi), clockwise: true)
+                        startAngle: CGFloat.pi / 2, endAngle: CGFloat.pi, clockwise: true)
             path.addLine(to: CGPoint(x: bounds.minX, y: bounds.minY + topLeft))
             path.addArc(withCenter: CGPoint(x: bounds.minX + topLeft, y: bounds.minY + topLeft), radius: topLeft,
-                        startAngle: CGFloat(Double.pi), endAngle: CGFloat(3 * Double.pi / 2), clockwise: true)
+                        startAngle: CGFloat.pi, endAngle: 3 * CGFloat.pi / 2, clockwise: true)
             path.close()
 
             let maskLayer = CAShapeLayer()
@@ -157,22 +157,29 @@ public extension UIView {
     }
     
     // MARK: TWLUIViewClassExStruct
+    @MainActor
      struct TWLUIViewClassExStruct {
          public static func loadFromNib<T>() -> T where T: UIView {
-            return Bundle.main.loadNibNamed(String(describing: T.self), owner: nil, options: nil)?.first as! T
+            guard let view = Bundle.main.loadNibNamed(
+                String(describing: T.self),
+                owner: nil,
+                options: nil
+            )?.first as? T else {
+                fatalError("Unable to load \(T.self) from its nib.")
+            }
+
+            return view
         }
     }
     
     
 
     
-    static var twl: TWLUIViewClassExStruct.Type {return TWLUIViewClassExStruct.self}
+    static var twl: TWLUIViewClassExStruct.Type { TWLUIViewClassExStruct.self }
     
 
     var twl: TWLUIViewExStruct {
-        get {
-            TWLUIViewExStruct(self)
-        }
+        get { TWLUIViewExStruct(self) }
         set {}
     }
     

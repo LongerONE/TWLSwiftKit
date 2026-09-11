@@ -29,8 +29,6 @@ open class TWLAlertView: TWLView {
     public var keyboardTopSpace: CGFloat = 20.0
     public var bottomOffset: CGFloat = 0
     
-    private var pendingKeyboardAdjustment: DispatchWorkItem?
-    private var lastKeyboardHeight: CGFloat = 0
     private var originalY: CGFloat?
     private var originalCenter: CGPoint?
     
@@ -88,9 +86,7 @@ open class TWLAlertView: TWLView {
         guard let showView = on != nil ? on : UIApplication.shared.twlKeyWindow else { return nil }
         for subview in showView.subviews {
             if subview.isKind(of: TWLMaskBtn.self), let alertView = subview.subviews.first as? Self {
-                if alertView is Self {
-                    return alertView
-                }
+                return alertView
             }
         }
         return nil

@@ -126,7 +126,7 @@ open class TWLConfButton: UIButton {
             self.normalImage = image
             
         } else {
-            if let image = image {
+            if image != nil {
                 self.init(type: .custom)
             } else {
                 self.init(type: .system)

@@ -6,7 +6,6 @@ import Foundation
 import UIKit
 
 public extension String {
-        
     struct TWLStringStruct {
         private let string: String
         
@@ -16,30 +15,30 @@ public extension String {
         
         // 移除前面空格
         public var trimmedLeadingWhitespace: String {
-            if let range = self.string.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
-                return String(self.string[range.lowerBound...])
+            if let range = string.rangeOfCharacter(from: .whitespacesAndNewlines.inverted) {
+                return String(string[range.lowerBound...])
             }
-            return self.string
+            return string
         }
         
         public var localized: String {
-            return NSLocalizedString(self.string, comment: "")
+            NSLocalizedString(string, comment: "")
         }
         
         public var addPercent: String {
-            return self.string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self.string
+            string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? string
         }
 
         public var addPercentAllowLetters: String {
-            return self.string.addingPercentEncoding(withAllowedCharacters: .letters) ?? self.string
+            string.addingPercentEncoding(withAllowedCharacters: .letters) ?? string
         }
         
         public var array: Array<Any>? {
-            if let jsonData = self.string.data(using: .utf8) {
+            if let jsonData = string.data(using: .utf8) {
                 do {
                     let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? Array<Any>
                     return jsonArray
-                } catch let error {
+                } catch {
                     TWLDPrint("❌ JSON String 转数组失败: \(error.localizedDescription)")
                     return nil
                 }
@@ -49,7 +48,7 @@ public extension String {
         }
         
         public var dict: [String: Any]? {
-            if let jsonData = self.string.data(using: .utf8) {
+            if let jsonData = string.data(using: .utf8) {
                 do {
                     let jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
                     return jsonDictionary
@@ -62,19 +61,16 @@ public extension String {
             }
         }
         
-        public func addQuery(key:String, value: String) -> String {
-            if self.string.contains("?") {
-                return "\(self.string)&\(key)=\(value)"
+        public func addQuery(key: String, value: String) -> String {
+            if string.contains("?") {
+                return "\(string)&\(key)=\(value)"
             } else {
-                return "\(self.string)?\(key)=\(value)"
+                return "\(string)?\(key)=\(value)"
             }
         }
         
-        public var color: UIColor? {
-            get {
-                return UIColor.twl.from(hex: self.string)
-            }
-        }
+        @MainActor
+        public var color: UIColor? { UIColor.twl.from(hex: string) }
         
         /// 返回指定字符串中所有目标子字符串的 Range
         /// - Parameters:
@@ -84,13 +80,13 @@ public extension String {
             guard !searchString.isEmpty else { return [] }
 
             var ranges: [Range<String.Index>] = []
-            var searchStart = self.string.startIndex
-            
-            while searchStart < self.string.endIndex,
-                  let foundRange = self.string.range(
+            var searchStart = string.startIndex
+
+            while searchStart < string.endIndex,
+                  let foundRange = string.range(
                     of: searchString,
                     options: [],
-                    range: searchStart..<self.string.endIndex
+                    range: searchStart..<string.endIndex
                   ) {
                 ranges.append(foundRange)
                 searchStart = foundRange.upperBound
@@ -101,35 +97,35 @@ public extension String {
         
         
         public func substring(at location: Int, length: Int) -> String? {
-            guard location >= 0, length >= 0, location <= self.string.count,
-                  length <= self.string.count - location else { return nil }
+            guard location >= 0, length >= 0, location <= string.count,
+                  length <= string.count - location else { return nil }
 
-            let startIndex = self.string.index(self.string.startIndex, offsetBy: location)
-            let endIndex = self.string.index(startIndex, offsetBy: length)
-            return String(self.string[startIndex..<endIndex])
+            let startIndex = string.index(string.startIndex, offsetBy: location)
+            let endIndex = string.index(startIndex, offsetBy: length)
+            return String(string[startIndex..<endIndex])
         }
         
         /// 从开头到指定位置（不含该位置）的子串
         public func substring(to location: Int) -> String? {
-            guard location >= 0, location <= self.string.count else {
+            guard location >= 0, location <= string.count else {
                 return nil
             }
-            let endIndex = self.string.index(self.string.startIndex, offsetBy: location)
-            return String(self.string[self.string.startIndex..<endIndex])
+            let endIndex = string.index(string.startIndex, offsetBy: location)
+            return String(string[string.startIndex..<endIndex])
         }
 
         /// 从指定位置到结尾的子串
         public func substring(from location: Int) -> String? {
-            guard location >= 0, location <= self.string.count else {
+            guard location >= 0, location <= string.count else {
                 return nil
             }
-            let startIndex = self.string.index(self.string.startIndex, offsetBy: location)
-            return String(self.string[startIndex..<self.string.endIndex])
+            let startIndex = string.index(string.startIndex, offsetBy: location)
+            return String(string[startIndex..<string.endIndex])
         }
         
         
-        public var prettyJSONString: String? {
-            guard let data = self.string.data(using: .utf8) else {
+        public var prettyJsonString: String? {
+            guard let data = string.data(using: .utf8) else {
                 return nil
             }
             
@@ -142,10 +138,13 @@ public extension String {
                 return nil
             }
         }
+
+        @available(*, deprecated, renamed: "prettyJsonString")
+        public var prettyJSONString: String? { prettyJsonString }
     }
     
 
-     var twl: TWLStringStruct {
-        return TWLStringStruct(self)
+    var twl: TWLStringStruct {
+        TWLStringStruct(self)
     }
 }

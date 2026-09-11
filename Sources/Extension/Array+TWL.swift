@@ -4,17 +4,17 @@
 
 import Foundation
 
-public extension Array  {
+public extension Array {
     struct TWLArrayStruct {
-        private var arrry: Array
+        private let array: [Any]
         
-        init(_ arrry: Array) {
-            self.arrry = arrry
+        init(_ array: [Any]) {
+            self.array = array
         }
         
-        public var JSONString: String? {
+        public var jsonString: String? {
             do {
-                let jsonData = try JSONSerialization.data(withJSONObject: self.arrry, options: [])
+                let jsonData = try JSONSerialization.data(withJSONObject: array, options: [])
                 let jsonString = String(data: jsonData, encoding: .utf8)
                 return jsonString
             } catch {
@@ -24,9 +24,9 @@ public extension Array  {
         }
         
         
-        public var prettyJSONString: String? {
+        public var prettyJsonString: String? {
             do {
-                let jsonData = try JSONSerialization.data(withJSONObject: self.arrry, options: [.prettyPrinted])
+                let jsonData = try JSONSerialization.data(withJSONObject: array, options: [.prettyPrinted])
                 let jsonString = String(data: jsonData, encoding: .utf8)
                 return jsonString
             } catch {
@@ -34,11 +34,16 @@ public extension Array  {
                 return nil
             }
         }
+
+        @available(*, deprecated, renamed: "jsonString")
+        public var JSONString: String? { jsonString }
+
+        @available(*, deprecated, renamed: "prettyJsonString")
+        public var prettyJSONString: String? { prettyJsonString }
     }
     
     
     var twl: TWLArrayStruct {
-        return TWLArrayStruct(self)
+        TWLArrayStruct(map { $0 as Any })
     }
 }
-

@@ -102,7 +102,7 @@ open class TWLAutoFlowView: UIView {
 
                         if count < colCount {
                             // 不足一行，手动指定宽度
-                            let constraint = currentView.widthAnchor.constraint(equalTo: currentView.superview!.widthAnchor, multiplier: 1.0 / CGFloat(colCount))
+                            let constraint = currentView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(colCount))
                             allConstraints.append(constraint)
                         }
                     }
@@ -187,4 +187,3 @@ open class TWLAutoFlowView: UIView {
         }
     }
 }
-

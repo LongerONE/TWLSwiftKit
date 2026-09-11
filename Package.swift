@@ -23,5 +23,6 @@ let package = Package(
                 .copy("Assets/PrivacyInfo.xcprivacy")
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )

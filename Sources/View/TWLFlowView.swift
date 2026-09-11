@@ -5,16 +5,20 @@
 
 import UIKit
 
-public protocol TWLFlowViewDataSouce: NSObjectProtocol {
+@MainActor
+public protocol TWLFlowViewDataSource: NSObjectProtocol {
     
     func numberOfViews(flowView: TWLFlowView) -> Int
     
     func viewForIndex(flowView: TWLFlowView, index: Int) -> UIView
 }
 
+@available(*, deprecated, renamed: "TWLFlowViewDataSource")
+public typealias TWLFlowViewDataSouce = TWLFlowViewDataSource
+
 open class TWLFlowView: UIView {
     
-    open weak var dataSource: TWLFlowViewDataSouce? // 数据源优先于闭包
+    open weak var dataSource: (any TWLFlowViewDataSource)? // 数据源优先于闭包
     
     open var useAutoLayout = false
     open var useContentsHeight = false     // 由内容撑起高度
@@ -24,8 +28,8 @@ open class TWLFlowView: UIView {
     open var contentInset: UIEdgeInsets = .zero  // 内容边距
     open var showHeight: CGFloat = 0.0
     
-    open var numberClosure:() -> Int = { return 0}
-    open var viewClosure:(_ index: Int) -> UIView = { _ in return UIView()}
+    open var numberClosure: () -> Int = { 0 }
+    open var viewClosure: (_ index: Int) -> UIView = { _ in UIView() }
     
     private var count: Int = 0
     
@@ -95,7 +99,7 @@ open class TWLFlowView: UIView {
                             // 不足一行，手动指定宽度
                             NSLayoutConstraint.activate([
                                 // 宽度为父视图的三分之一
-                                currentView.widthAnchor.constraint(equalTo: currentView.superview!.widthAnchor, multiplier: 1.0/CGFloat(colCount)),
+                                currentView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(colCount)),
                             ])
                         }
                     }
@@ -196,4 +200,3 @@ open class TWLFlowView: UIView {
     
     
 }
-

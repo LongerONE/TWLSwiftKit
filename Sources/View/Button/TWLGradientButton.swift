@@ -3,7 +3,7 @@ import UIKit
 // MARK: - CornerRadii
 
 /// 四个独立圆角半径配置
-public struct TWLCornerRadii: Equatable {
+public struct TWLCornerRadii: Equatable, Sendable {
     public var topLeft:     CGFloat
     public var topRight:    CGFloat
     public var bottomLeft:  CGFloat
@@ -32,7 +32,7 @@ public struct TWLCornerRadii: Equatable {
 
     // MARK: Presets
 
-    @MainActor public static let zero = TWLCornerRadii(all: 0)
+    public static let zero = TWLCornerRadii(all: 0)
 }
 
 // MARK: - CornerRadii + Path

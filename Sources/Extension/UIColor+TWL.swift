@@ -5,9 +5,11 @@
 import UIKit
 
 
+@MainActor
 public extension UIColor {
 
     // MARK: TWLUIViewClassExStruct
+    @MainActor
     struct TWLUIColorClassExStruct {
         private let color: UIColor
         
@@ -53,7 +55,7 @@ public extension UIColor {
             
             
 
-            return UIColor.init(red: red, green: green, blue: blue, alpha: a)
+            return UIColor(red: red, green: green, blue: blue, alpha: a)
         }
         
         /// 将 UIColor 转换为十六进制字符串
@@ -67,10 +69,13 @@ public extension UIColor {
             var blue: CGFloat = 0
             var alpha: CGFloat = 0
             
-            // 兼容非 RGB 色彩空间（如灰度）
-            guard self.color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
-                // 转换失败时返回透明黑，避免崩溃
-                return includeAlpha ? "\(prefix)00000000" : "\(prefix)000000"
+            if !color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+                guard color.getWhite(&red, alpha: &alpha) else {
+                    return includeAlpha ? "\(prefix)00000000" : "\(prefix)000000"
+                }
+
+                green = red
+                blue = red
             }
             
             let r = Int(round(red * 255))
@@ -87,12 +92,9 @@ public extension UIColor {
     }
     
     
-    static var twl: TWLUIColorClassExStruct.Type {return TWLUIColorClassExStruct.self}
+    static var twl: TWLUIColorClassExStruct.Type { TWLUIColorClassExStruct.self }
     
     var twl: TWLUIColorClassExStruct {
-        get {
-            TWLUIColorClassExStruct(self)
-        }
-        set {}
+        TWLUIColorClassExStruct(self)
     }
 }

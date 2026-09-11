@@ -17,8 +17,6 @@ class ButtonsController: UIViewController {
         
         view.backgroundColor = UIColor.white
 
-        let btn = TWLButton()
-        
         let confBtn = TWLConfButton()
         if #available(iOS 15.0, *) {
             confBtn.configurationUpdateHandler = { btn in
@@ -34,7 +32,6 @@ class ButtonsController: UIViewController {
     
     
 }
-
 
 
 

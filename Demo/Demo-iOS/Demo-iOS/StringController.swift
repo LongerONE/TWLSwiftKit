@@ -20,7 +20,7 @@ class StringController: UIViewController {
             ["a" : "000",
              "b" :111]
         ]
-        TWLDPrint("\(arr.twl.JSONString ?? "")")
+        TWLDPrint("\(arr.twl.jsonString ?? "")")
         
         let string = """
                         [

@@ -7,55 +7,51 @@ import Foundation
 
 public extension Collection {
     subscript(twl index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
+        indices.contains(index) ? self[index] : nil
     }
     
-     var twl: TWLCollectionStruct {
-        return TWLCollectionStruct(self)
+    var twl: TWLCollectionStruct {
+        TWLCollectionStruct(self)
     }
-    
 }
 
 
 
 public struct TWLCollectionStruct {
-    private let collection: Collection
+    private let collection: any Collection
     
-    init(_ collection: Collection) {
+    init(_ collection: any Collection) {
         self.collection = collection
     }
     
     public var jsonString: String? {
-        get {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: self.collection, options: .fragmentsAllowed)
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    return jsonString
-                }
-            } catch {
-                TWLDPrint("Error converting collection to JSON: \(error)")
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: collection, options: .fragmentsAllowed)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
             }
-            
-            return nil
+        } catch {
+            TWLDPrint("Error converting collection to JSON: \(error)")
         }
-        
-        set {}
+
+        return nil
     }
     
     public var prettyJsonString: String? {
-        get {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: self.collection, options: .prettyPrinted)
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    return jsonString
-                }
-            } catch {
-                TWLDPrint("Error converting collection to JSON: \(error)")
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: collection, options: .prettyPrinted)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
             }
-            
-            return nil
+        } catch {
+            TWLDPrint("Error converting collection to JSON: \(error)")
         }
-        
-        set {}
+
+        return nil
+    }
+
+    @available(*, deprecated, renamed: "prettyJsonString")
+    public var prettyJSONString: String? {
+        prettyJsonString
     }
 }
